@@ -2,6 +2,12 @@
 name = "gdtf"
 version = "0.1.0"
 edition = "2021"
+description = "Tools to read and inspect General Device Type Format (GDTF) files."
+authors = ["cpdt <contact@cpdt.dev>"]
+keywords = ["gdtf", "parser", "lighting", "previz"]
+homepage = "https://github.com/cpdt/gdtf-rs"
+repository = "https://github.com/cpdt/gdtf-rs"
+license = "MIT"
 
 [dependencies]
 quick-xml = { version = "0.36", features = ["serialize", "overlapped-lists"] }

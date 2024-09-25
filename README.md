@@ -10,13 +10,14 @@
 [docs-badge]: https://img.shields.io/docsrs/gdtf
 [docs-url]: https://docs.rs/gdtf/
 [mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg
-[mit-url]: https://github.com/cpdt/gdtf/blob/master/LICENSE
-[build-badge]: https://github.com/cpdt/gdtf/workflows/Check/badge.svg
-[build-url]: https://github.com/cpdt/gdtf/actions?query=workflow%3ACheck+branch%3Amain
+[mit-url]: https://github.com/cpdt/gdtf-rs/blob/main/LICENSE
+[build-badge]: https://github.com/cpdt/gdtf-rs/workflows/Check/badge.svg
+[build-url]: https://github.com/cpdt/gdtf-rs/actions?query=workflow%3ACheck+branch%3Amain
 
 The General Device Type Format (GDTF) is an open standard for describing devices of the
 entertainment industry. The latest version, 1.2, is standardised as
 [DIN SPEC 15800:2022](https://www.beuth.de/en/technical-rule/din-spec-15800/349717520).
+
 This crate provides tools to read and inspect GDTF files. This is made up of three parts:
 - An object model which closely matches the structure defined in the GDTF specification.
 - A fairly lax parser capable of parsing mostly well-formed GDTF files into the object model.
