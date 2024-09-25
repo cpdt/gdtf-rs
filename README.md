@@ -12,8 +12,9 @@ This crate provides tools to read and inspect GDTF files. This is made up of thr
 
 # Example
 
-```
+```rust
 use gdtf_rs::GdtfFile;
+
 let file = std::fs::File::open("Generic@RGBW8@test.gdtf").expect("failed to read file");
 let gdtf = GdtfFile::new(file).expect("failed to parse gdtf");
 println!("GDTF file defines {} fixture types", gdtf.description.fixture_types.len());
