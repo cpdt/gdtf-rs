@@ -23,23 +23,22 @@ use uuid::Uuid;
 /// Corresponds to a `<FixtureType>` XML node.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FixtureType {
-    /// Name of the fixture type.
+    /// Name of the fixture type used to be displayed as the file name and the library name.
     ///
     /// Corresponds to the `Name` XML attribute.
     #[serde(rename = "@Name", skip_serializing_if = "Option::is_none")]
     pub name: Option<Name>,
 
-    /// Shortened name of the fixture type.
+    /// Short name of the fixture type.
     ///
-    /// Non detailed version or an abbreviation. Can use any characters or symbols.
+    /// The short name should be as short as possible, but precise enough to describe the fixture
+    /// type.
     ///
     /// Corresponds to the `ShortName` XML attribute.
     #[serde(rename = "@ShortName")]
     pub short_name: String,
 
     /// Detailed, complete name of the fixture type.
-    ///
-    /// Can use any characters or symbols.
     ///
     /// Corresponds to the `LongName` XML attribute.
     #[serde(rename = "@LongName")]
@@ -51,7 +50,7 @@ pub struct FixtureType {
     #[serde(rename = "@Manufacturer")]
     pub manufacturer: String,
 
-    /// Description of the fixture type.
+    /// Description of the fixture type to be displayed in the library.
     ///
     /// Corresponds to the `Description` XML attribute.
     #[serde(rename = "@Description")]
@@ -103,7 +102,7 @@ pub struct FixtureType {
     )]
     pub thumbnail_offset_y: i32,
 
-    /// UUID of the referenced fixture type, if one is provided.
+    /// Unique number (GUID) of a referenced fixture type.
     ///
     /// Corresponds to the `RefTF` XML attribute.
     #[serde(rename = "@RefTF", skip_serializing_if = "Option::is_none")]

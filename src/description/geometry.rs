@@ -522,13 +522,15 @@ pub struct BeamGeometry {
     #[serde(rename = "@ColorTemperature", default = "default_color_temperature")]
     pub color_temperature: f32,
 
-    /// Beam angle in degrees.
+    /// The angle of the light output at which the intensity is 50% of the maximum intensity
+    /// corresponding to the center of the beam.
     ///
     /// Corresponds to the `BeamAngle` XML attribute.
     #[serde(rename = "@BeamAngle", default = "default_beam_angle")]
     pub beam_angle: f32,
 
-    /// Field angle in degrees.
+    /// The angle of the light output at which the intensity is 10% of the maximum intensity
+    /// corresponding to the center of the beam.
     ///
     /// Corresponds to the `FieldAngle` XML attribute.
     #[serde(rename = "@FieldAngle", default = "default_field_angle")]
@@ -546,7 +548,7 @@ pub struct BeamGeometry {
     #[serde(rename = "@RectangleRatio", default = "default_rectangle_ratio")]
     pub rectangle_ratio: f32,
 
-    /// Beam radius on starting point.
+    /// Defines the radius of the light output of the lamp instance.
     ///
     /// Corresponds to the `BeamRadius` XML attribute.
     #[serde(rename = "@BeamRadius", default = "default_beam_radius")]

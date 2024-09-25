@@ -279,6 +279,8 @@ define_collect_helper!("Emitter" (serialize_emitters, deserialize_emitters) -> E
 /// Emitters are additive light sources such as LEDs and tungsten lamps with permanently fitted
 /// filters.
 ///
+/// An Emitter is linked to a [ChannelFunction](crate::dmx_mode::ChannelFunction).
+///
 /// Corresponds to an `<Emitter>` XML node.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Emitter {
@@ -378,6 +380,9 @@ define_collect_helper!("Filter" (serialize_filters, deserialize_filters) -> Filt
 ///
 /// Filters are subtractive light sources such as subtractive mixing flags and media used in
 /// physical or virtual color wheels.
+///
+/// A Filter is linked to a [ChannelFunction](crate::dmx_mode::ChannelFunction) or a
+/// [WheelSlot](crate::wheel::WheelSlot).
 ///
 /// Corresponds to a `<Filter>` XML node.
 #[derive(Debug, Clone, Serialize, Deserialize)]

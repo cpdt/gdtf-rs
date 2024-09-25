@@ -189,6 +189,12 @@ define_collect_helper!("DMXChannel" (serialize_dmx_channels, deserialize_dmx_cha
 pub struct DmxChannel {
     /// Number of the DMX break.
     ///
+    /// Breaks are used if a fixture needs more than one start address. For example, a scroller is
+    /// added to an existing conventional fixture and the fixture is connected to a dimmer. This
+    /// dimmer is patched in one universe and the scroller is connected to a PSU that, on the other
+    /// hand, is patched in another universe. Both, the conventional fixture and scroller, are
+    /// treated as one combined fixture.
+    ///
     /// Corresponds to the `DMXBreak` XML attribute.
     #[serde(rename = "@DMXBreak", default)]
     pub dmx_break: DmxBreak,
@@ -705,7 +711,7 @@ pub struct ChannelFunction {
     #[serde(rename = "@Name", skip_serializing_if = "Option::is_none")]
     pub name: Option<Name>,
 
-    /// Link to the attribute.
+    /// Link to the attribute that is controlled by this channel function.
     ///
     /// Corresponds to the `Attribute` XML attribute.
     #[serde(rename = "@Attribute", default = "default_channel_function_attribute")]
@@ -1053,13 +1059,15 @@ pub struct ModeMasterNode {
     #[serde(rename = "@ModeMaster")]
     pub node: Node,
 
-    /// DMX start value.
+    /// The lowest DMX value of the linked DMX channel or channel function to activate the current
+    /// channel function.
     ///
     /// Corresponds to the `ModeFrom` XML attribute.
     #[serde(rename = "@ModeFrom", default)]
     pub from: DmxValue,
 
-    /// DMX end value.
+    /// The highest DMX value of the linked DMX channel or channel function to activate the current
+    /// function.
     ///
     /// Corresponds to the `ModeTo` XML attribute.
     #[serde(rename = "@ModeTo", default)]
