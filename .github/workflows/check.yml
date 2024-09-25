@@ -1,0 +1,40 @@
+on:
+  pull_request:
+  push:
+    branches:
+      - 'main''
+
+name: Check
+
+jobs:
+  check-formatting:
+    name: Check formatting
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          components: rustfmt
+          override: true
+
+      - name: Check
+        run: cargo fmt -- --check
+
+  check-clippy:
+    name: Check Clippy
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          components: clippy
+          override: true
+
+      - name: Check
+        run: cargo clippy -- -D warnings
