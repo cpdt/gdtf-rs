@@ -19,7 +19,7 @@ use std::fmt::Formatter;
 /// new DMX mode.
 ///
 /// Corresponds to a `<DMXMode>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DmxMode {
     /// The unique name of the DMX mode.
     ///
@@ -185,7 +185,7 @@ define_collect_helper!("DMXChannel" (serialize_dmx_channels, deserialize_dmx_cha
 /// Defines a DMX channel in the footprint of a device.
 ///
 /// Corresponds to a `<DMXChannel>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DmxChannel {
     /// Number of the DMX break.
     ///
@@ -365,7 +365,7 @@ impl DmxChannel {
 /// Normal value:  1
 /// Special value: Overwrite
 /// ```
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum DmxBreak {
     /// Defined DMX break.
     Value(i32),
@@ -522,7 +522,7 @@ where
 /// at a time.
 ///
 /// Corresponds to a `<LogicalChannel>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct LogicalChannel {
     /// Link to the attribute.
     ///
@@ -683,7 +683,7 @@ where
 
 /// Defines if all the channel functions in a [LogicalChannel] react to a Group Control defined by
 /// the control system.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default, Serialize, Deserialize)]
 pub enum LogicalChannelMaster {
     /// Logical channel reacts to a grand master.
     Grand,
@@ -700,7 +700,7 @@ pub enum LogicalChannelMaster {
 /// Defines the function of a DMX range in a [LogicalChannel].
 ///
 /// Corresponds to a `<ChannelFunction>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ChannelFunction {
     /// The unique name of the channel function.
     ///
@@ -1051,7 +1051,7 @@ fn default_channel_function_physical_to() -> f32 {
 }
 
 /// A link to a [DmxChannel] or [ChannelFunction] defining the mode master of a [ChannelFunction].
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct ModeMasterNode {
     /// Link to a [DmxChannel] or a [ChannelFunction].
     ///
@@ -1097,7 +1097,7 @@ impl ModeMasterNode {
 }
 
 /// Represents the [DmxChannel] or [ChannelFunction] linked as a mode master with a [ModeMasterNode].
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum ModeMaster<'s> {
     /// Mode master is a DMX channel.
     DmxChannel(&'s DmxChannel),
@@ -1109,7 +1109,7 @@ pub enum ModeMaster<'s> {
 /// Defines a channel set of a [ChannelFunction].
 ///
 /// Corresponds to a `<ChannelSet>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ChannelSet {
     /// The name of the channel set.
     ///
@@ -1229,7 +1229,7 @@ where
 /// Defines a sub channel set of a [ChannelFunction].
 ///
 /// Corresponds to a `<SubChannelSet>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SubChannelSet {
     /// The name of the sub channel set.
     ///
@@ -1329,7 +1329,7 @@ define_collect_helper!("Relation" (serialize_relations, deserialize_relations) -
 /// Describes a dependency between a DMX channel and a channel function.
 ///
 /// Corresponds to a `<Relation>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Relation {
     /// The unique name of the relation.
     ///
@@ -1417,7 +1417,7 @@ impl Relation {
 }
 
 /// Type of relation described in a [Relation].
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum RelationType {
     /// Master multiplies the value of the follower.
     Multiply,
@@ -1433,7 +1433,7 @@ define_collect_helper!("FTMacro" (serialize_ft_macros, deserialize_ft_macros) ->
 /// A macro is made up of several sequences of DMX values.
 ///
 /// Corresponds to an `<FTMacro>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct FtMacro {
     /// The unique name of the macro.
     ///
@@ -1521,7 +1521,7 @@ impl FtMacro {
 /// Describes an individual sequence of DMX values in an [FtMacro].
 ///
 /// Corresponds to a `<MacroDMX>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct MacroDmx {
     /// The steps in the sequence.
     ///
@@ -1537,7 +1537,7 @@ pub struct MacroDmx {
 /// Describes a step in a [MacroDmx] sequence.
 ///
 /// Corresponds to a `<MacroDMXStep>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct MacroDmxStep {
     /// Duration of the step in seconds.
     ///
@@ -1563,7 +1563,7 @@ fn default_macro_dmx_step_duration() -> f32 {
 /// Describes the value for a DMX channel in a [MacroDmxStep].
 ///
 /// Corresponds to a `<MacroDMXValue>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct MacroDmxValue {
     /// Value of the DMX channel.
     ///

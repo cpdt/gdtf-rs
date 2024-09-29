@@ -15,7 +15,7 @@ use std::fmt::{Display, Formatter};
 /// Defines all Fixture Type Attributes that are used in the [fixture type](super::fixture_type::FixtureType).
 ///
 /// Corresponds to an `<AttributeDefinitions>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct AttributeDefinitions {
     /// Defines which attributes are to be activated together.
     ///
@@ -144,7 +144,7 @@ define_collect_helper!("ActivationGroup" (serialize_activation_groups, deseriali
 /// [Annex B](https://gdtf.eu/gdtf/annex/annex-b/) of the GDTF specification.
 ///
 /// Corresponds to an `<ActivationGroup>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct ActivationGroup {
     /// The unique name of the activation group.
     ///
@@ -180,7 +180,7 @@ define_collect_helper!("FeatureGroup" (serialize_feature_groups, deserialize_fea
 /// [Annex B](https://gdtf.eu/gdtf/annex/annex-b/) of the GDTF specification.
 ///
 /// Corresponds to a `<FeatureGroup>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct FeatureGroup {
     /// The unique name of the feature group.
     ///
@@ -244,7 +244,7 @@ impl FeatureGroup {
 /// access and search.
 ///
 /// Corresponds to a `<Feature>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Feature {
     /// The unique name of the feature.
     ///
@@ -277,7 +277,7 @@ define_collect_helper!("Attribute" (serialize_attributes, deserialize_attributes
 /// of the GDTF specification.
 ///
 /// Corresponds to an `<Attribute>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Attribute {
     /// The unique name of the attribute.
     ///
@@ -451,7 +451,7 @@ impl Attribute {
 /// fixture, such as the offset of an individual gobo or the duty cycle of a strobing shutter.
 ///
 /// Corresponds to a `<SubPhysicalUnit>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SubPhysicalUnit {
     /// The type of sub physical unit.
     ///
@@ -479,7 +479,7 @@ pub struct SubPhysicalUnit {
 }
 
 /// Valid types of a [SubPhysicalUnit].
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, Serialize, Deserialize)]
 pub enum SubPhysicalUnitType {
     /// Defines the offset of the selected wheel slot in degrees.
     ///
@@ -581,7 +581,7 @@ fn physical_to_default() -> f32 {
 }
 
 /// A measure of physical quantity.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub enum PhysicalUnit {
     /// Measured in percentage (%).
     Percent,

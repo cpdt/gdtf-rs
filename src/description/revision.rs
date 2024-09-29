@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 /// actual time and UserID is created by the database.
 ///
 /// Corresponds to a `<Revision>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Revision {
     /// User-defined text for this revision.
     ///

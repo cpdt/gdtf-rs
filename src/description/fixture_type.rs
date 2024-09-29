@@ -21,7 +21,7 @@ use uuid::Uuid;
 /// The starting point of a description of a fixture type.
 ///
 /// Corresponds to a `<FixtureType>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct FixtureType {
     /// Name of the fixture type used to be displayed as the file name and the library name.
     ///

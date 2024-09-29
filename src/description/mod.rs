@@ -24,7 +24,7 @@ pub mod wheel;
 /// Description of fixtures in a GDTF file.
 ///
 /// Corresponds to the root-level `<GDTF>` node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename = "GDTF")]
 pub struct Description {
     /// Defines the minimal version of compatability.

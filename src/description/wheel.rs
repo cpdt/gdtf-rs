@@ -16,7 +16,7 @@ use std::fmt::Formatter;
 /// Defines all physical or virtual wheels of the device.
 ///
 /// Corresponds to a `<Wheel>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Wheel {
     /// The unique name of the wheel.
     ///
@@ -80,7 +80,7 @@ impl Wheel {
 /// wheel slot index is normalized to 1.
 ///
 /// Corresponds to a `<Slot>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct WheelSlot {
     /// The unique name of the wheel slot.
     ///
@@ -184,7 +184,7 @@ impl WheelSlot {
 }
 
 /// Defines the optics of a [WheelSlot].
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum WheelSlotOptic {
     /// Color of the wheel slot.
     ///
@@ -215,7 +215,7 @@ impl Default for WheelSlotOptic {
 /// Defines a prism facet on the prism wheel slot.
 ///
 /// Corresponds to a `<Facet>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct PrismFacet {
     /// Color of the prism facet.
     ///
@@ -236,7 +236,7 @@ pub struct PrismFacet {
 /// in the beam in relation to the middle of the media file.
 ///
 /// Corresponds to an `<AnimationSystem>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct AnimationSystem {
     /// First point of the spline as an X and Y value.
     ///

@@ -15,7 +15,7 @@ use std::fmt::Formatter;
 /// is provided.
 ///
 /// Corresponds to a `<Protocols>` XML node.
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Protocols {
     /// Describes RDM information.
     ///
@@ -66,7 +66,7 @@ impl Protocols {
 /// Defines corresponding information for devices which support RDM.
 ///
 /// Corresponds to an `<FTRDM>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Rdm {
     /// Manufacturer ESTA ID.
     ///
@@ -124,7 +124,7 @@ impl Rdm {
 /// Defines RDM information for a specific firmware version of a device.
 ///
 /// Corresponds to a `<SoftwareVersionID>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct SoftwareVersion {
     /// Software version ID.
     ///
@@ -172,7 +172,7 @@ impl SoftwareVersion {
 /// Defines DMX personalities supported by an RDM-capable device.
 ///
 /// Corresponds to a `<DMXPersonality>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct DmxPersonality {
     /// Hex value of the DMX personality.
     ///
@@ -250,7 +250,7 @@ where
 /// Defines corresponding information for devices which support Art-Net.
 ///
 /// Corresponds to an `<Art-Net>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct ArtNet {
     /// Defines custom mappings between Art-Net values and DMX stream values.
     ///
@@ -264,7 +264,7 @@ pub struct ArtNet {
 /// Defines corresponding information for devices which support Streaming ACN.
 ///
 /// Corresponds to a `<sACN>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Sacn {
     /// Defines custom mappings between sACN values and DMX stream values.
     ///
@@ -278,7 +278,7 @@ pub struct Sacn {
 /// Defines a custom mapping between a protocol value and a DMX stream value.
 ///
 /// Corresponds to a `<Map>` XML node.
-#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct ProtocolMap {
     /// Value of the protocol value.
     ///
@@ -298,7 +298,7 @@ pub struct ProtocolMap {
 /// Has not yet been defined by the GDTF specification.
 ///
 /// Corresponds to a `<PosiStageNet>` XML node.
-#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct PosiStageNet;
 
 /// Defines corresponding information for devices which support OpenSoundControl.
@@ -306,7 +306,7 @@ pub struct PosiStageNet;
 /// Has not yet been defined by the GDTF specification.
 ///
 /// Corresponds to an `<OpenSoundControl>` XML node.
-#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct OpenSoundControl;
 
 /// Defines corresponding information for devices which support CITP.
@@ -314,5 +314,5 @@ pub struct OpenSoundControl;
 /// Has not yet been defined by the GDTF specification.
 ///
 /// Corresponds to a `<CITP>` XML node.
-#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Citp;

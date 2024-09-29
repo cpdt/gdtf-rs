@@ -93,7 +93,7 @@ pub trait AnyGeometry {
 /// Defines the physical description of a device's parts.
 ///
 /// Geometry is organised in a tree with each geometry having zero or more child geometries.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum Geometry {
     /// Basic geometry without specification.
     #[serde(rename = "Geometry")]
@@ -242,7 +242,7 @@ macro_rules! impl_any_geometry {
 /// Basic geometry without specification.
 ///
 /// Corresponds to a `<Geometry>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct GenericGeometry {
     /// The unique name of the geometry.
     ///
@@ -277,7 +277,7 @@ impl_any_geometry!(GenericGeometry);
 /// Defines device parts with a rotation axis.
 ///
 /// Corresponds to an `<Axis>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct AxisGeometry {
     /// The unique name of the geometry.
     ///
@@ -314,7 +314,7 @@ impl_any_geometry!(AxisGeometry);
 /// Defines device parts with a beam filter.
 ///
 /// Corresponds to a `<FilterBeam>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct BeamFilterGeometry {
     /// The unique name of the geometry.
     ///
@@ -350,7 +350,7 @@ impl_any_geometry!(BeamFilterGeometry);
 /// Defines device parts with a color filter.
 ///
 /// Corresponds to a `<FilterColor>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ColorFilterGeometry {
     /// The unique name of the geometry.
     ///
@@ -385,7 +385,7 @@ impl_any_geometry!(ColorFilterGeometry);
 /// Defines device parts with gobo wheels.
 ///
 /// Corresponds to a `<FilterGobo>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct GoboFilterGeometry {
     /// The unique name of the geometry.
     ///
@@ -420,7 +420,7 @@ impl_any_geometry!(GoboFilterGeometry);
 /// Defines device parts with a shaper.
 ///
 /// Corresponds to a `<FilterShaper>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ShaperFilterGeometry {
     /// The unique name of the geometry.
     ///
@@ -459,7 +459,7 @@ impl_any_geometry!(ShaperFilterGeometry);
 /// lens) and not the position of the light source inside the device.
 ///
 /// Corresponds to a `<Beam>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct BeamGeometry {
     /// The unique name of the geometry.
     ///
@@ -673,7 +673,7 @@ pub enum BeamType {
 /// Defines device parts with a layer of a media device that is used for displaying media files.
 ///
 /// Corresponds to a `<MediaServerLayer>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct MediaServerLayerGeometry {
     /// The unique name of the geometry.
     ///
@@ -707,7 +707,7 @@ impl_any_geometry!(MediaServerLayerGeometry);
 ///
 ///
 /// Corresponds to a `<MediaServerCamera>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct MediaServerCameraGeometry {
     /// The unique name of the geometry.
     ///
@@ -740,7 +740,7 @@ impl_any_geometry!(MediaServerCameraGeometry);
 /// Defines device parts with a master control of one or several media devices.
 ///
 /// Corresponds to a `<MediaServerMaster>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct MediaServerMasterGeometry {
     /// The unique name of the geometry.
     ///
@@ -772,7 +772,7 @@ impl_any_geometry!(MediaServerMasterGeometry);
 /// Defines device parts with a self-emitting surface used to display visual media.
 ///
 /// Corresponds to a `<Display>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DisplayGeometry {
     /// The unique name of the geometry.
     ///
@@ -813,7 +813,7 @@ impl_any_geometry!(DisplayGeometry);
 /// For example: an LED panel with multiple pixels.
 ///
 /// Corresponds to a `<GeometryReference>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ReferenceGeometry {
     /// The unique name of the geometry.
     ///
@@ -896,7 +896,7 @@ impl ReferenceGeometry {
 }
 
 /// Specifies the DMX offset for the DMX channel of the referenced geometry.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Break {
     /// DMX offset.
     ///
@@ -923,7 +923,7 @@ fn default_break_dmx_break() -> u8 {
 /// Defines device parts with a laser's light output.
 ///
 /// Corresponds to a `<Laser>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct LaserGeometry {
     /// The unique name of the geometry.
     ///
@@ -1079,7 +1079,7 @@ pub enum ColorType {
 /// Defines device parts with an electrical device that can be wired.
 ///
 /// Corresponds to a `<WiringObject>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct WiringObjectGeometry {
     /// The unique name of the geometry.
     ///
@@ -1188,7 +1188,7 @@ impl AnyGeometry for WiringObjectGeometry {
 
 /// The type of electrical component used in a wiring object represented by a
 /// [WiringObjectGeometry].
-#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 #[serde(tag = "@ComponentType")]
 pub enum ComponentType {
     /// Input component.
@@ -1300,7 +1300,7 @@ pub enum ComponentType {
 }
 
 /// Fuse rating for a fuse represented by a [WiringObjectGeometry].
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum FuseRating {
     /// Type B fuse.
     B,
@@ -1319,7 +1319,7 @@ pub enum FuseRating {
 }
 
 /// Where the pins represented by a [WiringObjectGeometry] are located.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum Orientation {
     /// Pins face left.
     Left,
@@ -1338,7 +1338,7 @@ pub enum Orientation {
 /// objects.
 ///
 /// Corresponds to a `<PinPatch>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct PinPatch {
     /// Link to the wiring object connected through this pin patch.
     ///
@@ -1386,7 +1386,7 @@ impl PinPatch {
 /// Defines an inventory of device parts.
 ///
 /// Corresponds to an `<Inventory>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct InventoryGeometry {
     /// The unique name of the geometry.
     ///
@@ -1424,7 +1424,7 @@ impl_any_geometry!(InventoryGeometry);
 /// Defines device parts with a structure.
 ///
 /// Corresponds to a `<Structure>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct StructureGeometry {
     /// The unique name of the geometry.
     ///
@@ -1482,7 +1482,7 @@ impl StructureGeometry {
 }
 
 /// The type of structure represented by a [StructureGeometry].
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum StructureType {
     /// Structure describes a center line.
     CenterLineBased,
@@ -1492,7 +1492,7 @@ pub enum StructureType {
 }
 
 /// The type of cross section of the structure represented by a [StructureGeometry].
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(tag = "@CrossSectionType")]
 pub enum CrossSectionType {
     /// Structure has a truss framework cross section.
@@ -1523,7 +1523,7 @@ pub enum CrossSectionType {
 /// Defines device parts with a support.
 ///
 /// Corresponds to a `<Support>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SupportGeometry {
     /// The unique name of the geometry.
     ///
@@ -1598,7 +1598,7 @@ pub struct SupportGeometry {
 impl_any_geometry!(SupportGeometry);
 
 /// The type of support represented by a [SupportGeometry].
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(tag = "@SupportType")]
 pub enum SupportType {
     /// Support is a rope.
@@ -1661,7 +1661,7 @@ pub enum SupportType {
 /// A magnet is a point where other geometries should be attached.
 ///
 /// Corresponds to a `<Magnet>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct MagnetGeometry {
     /// The unique name of the geometry.
     ///
@@ -1715,7 +1715,7 @@ fn default_beam_radius() -> f32 {
 /// Specifies the protocol for a Laser.
 ///
 /// Corresponds to a `<Protocol>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct LaserProtocol {
     /// Name of the protocol.
     ///

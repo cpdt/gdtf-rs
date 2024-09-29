@@ -7,5 +7,5 @@ use serde::{Deserialize, Serialize};
 /// Has not yet been defined by the GDTF specification.
 ///
 /// Corresponds to an `<FTPreset>` XML node.
-#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct FtPreset;

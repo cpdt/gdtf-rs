@@ -11,7 +11,7 @@ use std::num::NonZeroU8;
 /// Describes the physical constitution of the device.
 ///
 /// Corresponds to a `<PhysicalDescriptions>` XML node.
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct PhysicalDescriptions {
     /// Describes device emitters.
     ///
@@ -282,7 +282,7 @@ define_collect_helper!("Emitter" (serialize_emitters, deserialize_emitters) -> E
 /// An Emitter is linked to a [ChannelFunction](crate::dmx_mode::ChannelFunction).
 ///
 /// Corresponds to an `<Emitter>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Emitter {
     /// Unique name of the emitter.
     ///
@@ -344,7 +344,7 @@ impl Emitter {
 ///
 /// An emitter defines either a color or a dominant wavelength. Non-visible emitters (eg. UV)
 /// are defined only by a dominant wavelength.
-#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum EmitterOptic {
     /// Defines the optics of the emitter in terms of a color.
@@ -385,7 +385,7 @@ define_collect_helper!("Filter" (serialize_filters, deserialize_filters) -> Filt
 /// [WheelSlot](crate::wheel::WheelSlot).
 ///
 /// Corresponds to a `<Filter>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Filter {
     /// Unique name of the filter.
     ///
@@ -450,7 +450,7 @@ impl Filter {
 /// affect the beam. Physical value 100 is maximally inserted and affects the beam.
 ///
 /// Corresponds to a `<Measurement>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Measurement {
     /// A unique value between 0 and 100.
     ///
@@ -498,7 +498,7 @@ pub struct Measurement {
 /// Recommended measurement spacing is 1nm. Measurement spacing should not exceed 4 nm.
 ///
 /// Corresponds to a `<MeasurementPoint>` XML node.
-#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 pub struct MeasurementPoint {
     /// Center wavelength of measurement (nm).
     ///
@@ -514,7 +514,7 @@ pub struct MeasurementPoint {
 }
 
 /// Interpolation from one [Measurement] to the next.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default, Serialize, Deserialize)]
 pub enum Interpolation {
     /// No interpolation.
     Step,
@@ -536,7 +536,7 @@ define_collect_helper!("ColorSpace" (serialize_color_spaces, deserialize_color_s
 /// space indicates how this is converted into physical values.
 ///
 /// Corresponds to a `<ColorSpace>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ColorSpace {
     /// Unique name of the color space.
     ///
@@ -569,7 +569,7 @@ impl ColorSpace {
 /// All color spaces are defined in terms of a red primary, green primary, blue primary and white
 /// point. A handful of common color spaces are predefined, and others may be defined by providing
 /// primary values.
-#[derive(Debug, Clone, Copy, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Serialize, Deserialize)]
 #[serde(tag = "@Mode")]
 pub enum ColorSpaceMode {
     /// Custom color space defined in terms of a red primary, green primary, blue primary and
@@ -638,7 +638,7 @@ define_collect_helper!("Gamut" (serialize_gamuts, deserialize_gamuts) -> Gamut);
 /// A gamut is the set of attainable colors by the fixture.
 ///
 /// Corresponds to a `<Gamut>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Gamut {
     /// Unique name of the gamut.
     ///
@@ -681,7 +681,7 @@ define_collect_helper!("DMXProfile" (serialize_dmx_profiles, deserialize_dmx_pro
 /// Defines a DMX profile description.
 ///
 /// Corresponds to a `<DMXProfile>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DmxProfile {
     /// Unique name of the DMX profile.
     ///
@@ -735,7 +735,7 @@ impl DmxProfile {
 /// A point to define the curve of a [DmxProfile].
 ///
 /// Corresponds to a `<Point>` XML node.
-#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 pub struct Point {
     /// DMX percentage of the point.
     ///
@@ -775,7 +775,7 @@ define_collect_helper!("CRIGroup" (serialize_cri_groups, deserialize_cri_groups)
 /// CRIs (color rendering indices) use TM-30-15 Fidelity Index (Rf) for 99 color samples.
 ///
 /// Corresponds to a `<CRIGroup>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct CriGroup {
     /// Color temperature in kelvin.
     ///
@@ -811,7 +811,7 @@ fn default_color_temperature() -> f32 {
 /// Defines the color rendering index for one of the 99 color samples.
 ///
 /// Corresponds to a `<CRI>` XML node.
-#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Cri {
     /// Color sample from 1 to 99.
     ///
@@ -838,7 +838,7 @@ pub struct Cri {
 /// ```text
 /// CES01
 /// ```
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Ces(NonZeroU8);
 
 impl Ces {
@@ -916,7 +916,7 @@ define_collect_helper!("Connector" (serialize_connectors, deserialize_connectors
 /// tree.
 ///
 /// Corresponds to a `<Connector>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Connector {
     /// Unique name of the connector.
     ///
@@ -972,7 +972,7 @@ impl Connector {
 /// Defines general properties of the device type.
 ///
 /// Corresponds to a `<Properties>` XML node.
-#[derive(Debug, Clone, Copy, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Default, Serialize, Deserialize)]
 pub struct Properties {
     /// Optional temperature range in which the device can be operated.
     ///
@@ -1013,7 +1013,7 @@ pub struct Properties {
 /// Defines the ambient operating temperature range of a device.
 ///
 /// Corresponds to an `<OperatingTemperature>` XML child node.
-#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 pub struct OperatingTemperature {
     /// Lowest temperature the device can be operated in °C.
     ///

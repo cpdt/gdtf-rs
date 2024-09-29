@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 /// geometries. Each geometry has a separate model description and a physical description.
 ///
 /// Corresponds to a `<Model>` XML node.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Model {
     /// The unique name of the model.
     ///
@@ -144,7 +144,7 @@ impl Model {
 }
 
 /// Type of 3D [Model].
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default, Serialize, Deserialize)]
 pub enum PrimitiveType {
     /// Cube primitive. Not defined in specification.
     Cube,

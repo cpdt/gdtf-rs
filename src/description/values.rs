@@ -78,7 +78,7 @@ fn is_invalid_name_char(ch: char) -> bool {
 ///
 /// The allowed characters are listed in [Annex C](https://gdtf.eu/gdtf/annex/annex-c/) of the GDTF
 /// reference.
-#[derive(Debug, Clone, Default, PartialEq, Eq)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, Hash)]
 pub struct Name(String);
 
 impl Name {
@@ -202,7 +202,7 @@ impl<'de> Deserialize<'de> for Name {
 /// ```text
 /// Name.Name.Name...
 /// ```
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Node(Vec<Name>);
 
 impl Node {
@@ -296,7 +296,7 @@ impl NodeExt for [Name] {
 /// ```text
 /// x,y,Y
 /// ```
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct ColorCie {
     /// CIE x value
     pub x: f32,
@@ -368,7 +368,7 @@ impl ColorCie {
 /// ```text
 /// {x,y,z}
 /// ```
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Vector3([f32; 3]);
 
 impl Vector3 {
@@ -439,7 +439,7 @@ impl<'de> Deserialize<'de> for Vector3 {
 /// {float,float,float,float}
 /// {float,float,float,float}
 /// ```
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Matrix([[f32; 4]; 4]);
 
 impl Matrix {
@@ -540,7 +540,7 @@ impl<'de> Deserialize<'de> for Matrix {
 /// {float,float,float}
 /// {float,float,float}
 /// ```
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Rotation([[f32; 3]; 3]);
 
 impl Rotation {
@@ -626,7 +626,7 @@ impl<'de> Deserialize<'de> for Rotation {
 /// Absolute format:  <int>
 /// Alternate format: Universe.Address
 /// ```
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct DmxAddress(u32);
 
 impl Serialize for DmxAddress {
@@ -750,7 +750,7 @@ impl DmxAddress {
 /// Mirroring format: value/n
 /// Shifting format: value/ns
 /// ```
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct DmxValue {
     bytes: NonZeroU8,
     value: u64,
@@ -988,7 +988,7 @@ impl From<DmxValue> for u64 {
 /// A version value consisting of a major and minor number.
 ///
 /// Supported versions: `1.0`, `1.1`, `1.2`.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Version {
     /// Major version number.
     pub major: u8,
