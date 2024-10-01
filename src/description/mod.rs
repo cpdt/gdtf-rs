@@ -2,8 +2,11 @@ use crate::description::util::IterUtil;
 use crate::fixture_type::FixtureType;
 use crate::validation::{ValidationError, ValidationErrorType, ValidationObject, ValidationResult};
 use crate::values::{Name, Version};
-use crate::ResourceMap;
+use crate::{GdtfError, GdtfResult, ResourceMap};
 use serde::{Deserialize, Serialize};
+use std::fmt::Write;
+use std::io::BufRead;
+use std::str::FromStr;
 
 #[macro_use]
 mod collect_helper;
@@ -24,6 +27,11 @@ pub mod wheel;
 
 /// Description of fixtures in a GDTF file.
 ///
+/// Normally a `Description` is created while loading a GDTF file with
+/// [`GdtfFile::new`](crate::GdtfFile::new). However a few alternatives are provided:
+///  - Parsing a description XML manually with [`Self::from_reader`] or [`Self::from_str`].
+///  - Constructing an empty description with [`Self::new`].
+///
 /// Corresponds to the root-level `<GDTF>` node.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename = "GDTF")]
@@ -38,6 +46,41 @@ pub struct Description {
 }
 
 impl Description {
+    /// Creates an empty description.
+    ///
+    /// The description will default to the latest GDTF version, currently `1.2`.
+    pub fn new() -> Self {
+        Description {
+            data_version: Version { major: 1, minor: 2 },
+            fixture_types: Vec::new(),
+        }
+    }
+
+    /// Deserializes a GDTF description from a stream of XML data.
+    ///
+    /// If you already have a string use [`Self::from_str`]. If you have a `&[u8]` which is known to
+    /// represent UTF-8, you can decode it first before using [`from_str`](Self::from_str).
+    pub fn from_reader<R>(reader: R) -> GdtfResult<Self>
+    where
+        R: BufRead,
+    {
+        let mut de = quick_xml::de::Deserializer::from_reader(reader);
+        Ok(serde_path_to_error::deserialize(&mut de)?)
+    }
+
+    /// Serializes as XML data into a `Write`r.
+    pub fn to_writer<W>(&self, writer: W) -> GdtfResult<()>
+    where
+        W: Write,
+    {
+        Ok(quick_xml::se::to_writer(writer, self)?)
+    }
+
+    /// Serializes as XML data into a `String`.
+    pub fn to_string(&self) -> GdtfResult<String> {
+        Ok(quick_xml::se::to_string(self)?)
+    }
+
     /// Looks up a [FixtureType] by [name](FixtureType::name).
     pub fn fixture_type(&self, name: &str) -> Option<&FixtureType> {
         self.fixture_types
@@ -71,5 +114,21 @@ impl Description {
         for fixture_type in &self.fixture_types {
             fixture_type.validate(resource_map, result);
         }
+    }
+}
+
+impl Default for Description {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl FromStr for Description {
+    type Err = GdtfError;
+
+    /// Deserializes a GDTF description from an XML string.
+    fn from_str(s: &str) -> GdtfResult<Self> {
+        let mut de = quick_xml::de::Deserializer::from_str(s);
+        Ok(serde_path_to_error::deserialize(&mut de)?)
     }
 }

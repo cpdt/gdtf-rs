@@ -1,5 +1,5 @@
 //! Provides parsing helpers to work around internally tagged enums that produce wrong results
-//! because of https://github.com/serde-rs/serde/issues/1183.
+//! because of <https://github.com/serde-rs/serde/issues/1183>.
 //!
 //! This workaround involves annotating all "primitive" fields of an enum with a custom
 //! `deserialize_with` function. The fields must implement [FromStr] or be an Option which contains
