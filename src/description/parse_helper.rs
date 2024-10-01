@@ -15,7 +15,7 @@
 //!     Simple,
 //!     Extended {
 //!         #[serde(rename = "@Voltage")]
-//!         voltage: Option<f32>,
+//!         voltage: Option<f64>,
 //!     }
 //! }
 //! ```
@@ -31,7 +31,7 @@
 //!     Simple,
 //!     Extended {
 //!         #[serde(rename = "@Voltage", deserialize_with = "Parse::deserialize")]
-//!         voltage: Option<f32>,
+//!         voltage: Option<f64>,
 //!     }
 //! }
 //! ```
@@ -52,7 +52,7 @@ use std::marker::PhantomData;
 use std::str::FromStr;
 
 pub trait CanParse: FromStr {}
-impl CanParse for f32 {}
+impl CanParse for f64 {}
 
 pub trait Parse<'de>: Sized {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>

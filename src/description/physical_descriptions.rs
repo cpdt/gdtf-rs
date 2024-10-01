@@ -367,7 +367,7 @@ pub enum EmitterOptic {
             skip_serializing_if = "Option::is_none",
             deserialize_with = "Parse::deserialize"
         )]
-        dominant_wave_length: Option<f32>,
+        dominant_wave_length: Option<f64>,
     },
 
     /// Defines the optics of the emitter in terms of a dominant wavelength.
@@ -376,7 +376,7 @@ pub enum EmitterOptic {
         ///
         /// Corresponds to the `DominantWaveLength` XML attribute.
         #[serde(rename = "@DominantWaveLength")]
-        dominant_wave_length: f32,
+        dominant_wave_length: f64,
     },
 }
 
@@ -465,20 +465,20 @@ pub struct Measurement {
     ///
     /// Corresponds to the `Physical` XML attribute.
     #[serde(rename = "@Physical")]
-    pub physical: f32,
+    pub physical: f64,
 
     /// Overall candela value for the enclosed set of measurement. For additive color mixing only.
     ///
     /// Corresponds to the `LuminousIntensity` XML attribute.
     #[serde(rename = "@LuminousIntensity", skip_serializing_if = "Option::is_none")]
-    pub luminous_intensity: Option<f32>,
+    pub luminous_intensity: Option<f64>,
 
     /// Total amount of lighting energy passed at this insertion percentage. For subtractive color
     /// mixing only.
     ///
     /// Corresponds to the `Transmission` XML attribute.
     #[serde(rename = "@Transmission", skip_serializing_if = "Option::is_none")]
-    pub transmission: Option<f32>,
+    pub transmission: Option<f64>,
 
     /// Interpolation scheme from the previous value.
     ///
@@ -510,13 +510,13 @@ pub struct MeasurementPoint {
     ///
     /// Corresponds to the `WaveLength` XML attribute.
     #[serde(rename = "@WaveLength")]
-    pub wave_length: f32,
+    pub wave_length: f64,
 
     /// Lighting energy (W/m2/nm).
     ///
     /// Corresponds to the `Energy` XML attribute.
     #[serde(rename = "@Energy")]
-    pub energy: f32,
+    pub energy: f64,
 }
 
 /// Interpolation from one [Measurement] to the next.
@@ -747,31 +747,31 @@ pub struct Point {
     ///
     /// Corresponds to the `DMXPercentage` XML attribute.
     #[serde(rename = "@DMXPercentage", default)]
-    pub dmx_percentage: f32,
+    pub dmx_percentage: f64,
 
     /// Cubic function coefficient for x^0
     ///
     /// Corresponds to the `CFC0` XML attribute.
     #[serde(rename = "@CFC0", default)]
-    pub cfc0: f32,
+    pub cfc0: f64,
 
     /// Cubic function coefficient for x
     ///
     /// Corresponds to the `CFC1` XML attribute.
     #[serde(rename = "@CFC1", default)]
-    pub cfc1: f32,
+    pub cfc1: f64,
 
     /// Cubic function coefficient for x^2
     ///
     /// Corresponds to the `CFC2` XML attribute.
     #[serde(rename = "@CFC2", default)]
-    pub cfc2: f32,
+    pub cfc2: f64,
 
     /// Cubic function coefficient for x^3
     ///
     /// Corresponds to the `CFC3` XML attribute.
     #[serde(rename = "@CFC3", default)]
-    pub cfc3: f32,
+    pub cfc3: f64,
 }
 
 define_collect_helper!("CRIGroup" (serialize_cri_groups, deserialize_cri_groups) -> CriGroup);
@@ -787,7 +787,7 @@ pub struct CriGroup {
     ///
     /// Corresponds to the `ColorTemperature` XML attribute.
     #[serde(rename = "@ColorTemperature", default = "default_color_temperature")]
-    pub color_temperature: f32,
+    pub color_temperature: f64,
 
     /// A list of CRI values for up to 99 color samples.
     ///
@@ -810,7 +810,7 @@ impl CriGroup {
     }
 }
 
-fn default_color_temperature() -> f32 {
+fn default_color_temperature() -> f64 {
     6000.
 }
 
@@ -959,7 +959,7 @@ pub struct Connector {
     ///
     /// Corresponds to the `Length` XML attribute.
     #[serde(rename = "@Length", default)]
-    pub length: f32,
+    pub length: f64,
 }
 
 impl Connector {
@@ -999,7 +999,7 @@ pub struct Properties {
         deserialize_with = "deserialize_value_float",
         default
     )]
-    pub weight: Option<f32>,
+    pub weight: Option<f64>,
 
     /// Optional height of the legs in meters.
     ///
@@ -1013,7 +1013,7 @@ pub struct Properties {
         deserialize_with = "deserialize_value_float",
         default
     )]
-    pub leg_height: Option<f32>,
+    pub leg_height: Option<f64>,
 }
 
 /// Defines the ambient operating temperature range of a device.
@@ -1025,42 +1025,42 @@ pub struct OperatingTemperature {
     ///
     /// Corresponds to the `Low` XML attribute.
     #[serde(rename = "@Low", default = "default_low_operating_temperature")]
-    pub low: f32,
+    pub low: f64,
 
     /// Highest temperature the device can be operated in °C.
     ///
     /// Corresponds to the `High` XML attribute.
     #[serde(rename = "@High", default = "default_high_operating_temperature")]
-    pub high: f32,
+    pub high: f64,
 }
 
-fn default_low_operating_temperature() -> f32 {
+fn default_low_operating_temperature() -> f64 {
     0.
 }
-fn default_high_operating_temperature() -> f32 {
+fn default_high_operating_temperature() -> f64 {
     40.
 }
 
-fn serialize_value_float<S>(value: &Option<f32>, serializer: S) -> Result<S::Ok, S::Error>
+fn serialize_value_float<S>(value: &Option<f64>, serializer: S) -> Result<S::Ok, S::Error>
 where
     S: Serializer,
 {
     #[derive(Serialize)]
     struct SeShim<'s> {
         #[serde(rename = "@Value")]
-        value: &'s Option<f32>,
+        value: &'s Option<f64>,
     }
     SeShim { value }.serialize(serializer)
 }
 
-fn deserialize_value_float<'de, D>(deserializer: D) -> Result<Option<f32>, D::Error>
+fn deserialize_value_float<'de, D>(deserializer: D) -> Result<Option<f64>, D::Error>
 where
     D: Deserializer<'de>,
 {
     #[derive(Deserialize)]
     struct DeShim {
         #[serde(rename = "@Value", default)]
-        value: Option<f32>,
+        value: Option<f64>,
     }
     DeShim::deserialize(deserializer).map(|shim| shim.value)
 }

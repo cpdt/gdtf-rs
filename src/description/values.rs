@@ -299,13 +299,13 @@ impl NodeExt for [Name] {
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct ColorCie {
     /// CIE x value
-    pub x: f32,
+    pub x: f64,
 
     /// CIE y value
-    pub y: f32,
+    pub y: f64,
 
     /// CIE Y value
-    pub z: f32,
+    pub z: f64,
 }
 
 impl Serialize for ColorCie {
@@ -336,7 +336,7 @@ impl<'de> Deserialize<'de> for ColorCie {
                 E: Error,
             {
                 let fields = v.split(',').map(|field_str| {
-                    field_str.trim().parse::<f32>().map_err(|_| {
+                    field_str.trim().parse::<f64>().map_err(|_| {
                         E::invalid_value(Unexpected::Str(field_str), &"a floating point number")
                     })
                 });
@@ -369,7 +369,7 @@ impl ColorCie {
 /// {x,y,z}
 /// ```
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub struct Vector3([f32; 3]);
+pub struct Vector3([f64; 3]);
 
 impl Vector3 {
     /// Constructs a zero-sized vector.
@@ -411,7 +411,7 @@ impl<'de> Deserialize<'de> for Vector3 {
                 };
 
                 let fields = without_tails.split(',').map(|field_str| {
-                    field_str.trim().parse::<f32>().map_err(|_| {
+                    field_str.trim().parse::<f64>().map_err(|_| {
                         E::invalid_value(Unexpected::Str(field_str), &"a floating point number")
                     })
                 });
@@ -440,7 +440,7 @@ impl<'de> Deserialize<'de> for Vector3 {
 /// {float,float,float,float}
 /// ```
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub struct Matrix([[f32; 4]; 4]);
+pub struct Matrix([[f64; 4]; 4]);
 
 impl Matrix {
     /// Constructs a matrix representing an identity transform.
@@ -509,7 +509,7 @@ impl<'de> Deserialize<'de> for Matrix {
                     };
 
                     let columns = without_end.split(',').map(|column_str| {
-                        column_str.trim().parse::<f32>().map_err(|_| {
+                        column_str.trim().parse::<f64>().map_err(|_| {
                             E::invalid_value(
                                 Unexpected::Str(column_str),
                                 &"a floating point number",
@@ -541,7 +541,7 @@ impl<'de> Deserialize<'de> for Matrix {
 /// {float,float,float}
 /// ```
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub struct Rotation([[f32; 3]; 3]);
+pub struct Rotation([[f64; 3]; 3]);
 
 impl Rotation {
     /// Constructs a matrix representing an identity rotation.
@@ -598,7 +598,7 @@ impl<'de> Deserialize<'de> for Rotation {
                     };
 
                     let columns = without_end.split(',').map(|column_str| {
-                        column_str.trim().parse::<f32>().map_err(|_| {
+                        column_str.trim().parse::<f64>().map_err(|_| {
                             E::invalid_value(
                                 Unexpected::Str(column_str),
                                 &"a floating point number",

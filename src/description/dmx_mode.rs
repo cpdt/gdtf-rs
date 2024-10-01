@@ -558,7 +558,7 @@ pub struct LogicalChannel {
     ///
     /// Corresponds to the `MibFade` XML attribute.
     #[serde(rename = "@MibFade", default)]
-    pub mib_fade: f32,
+    pub mib_fade: f64,
 
     /// Minimum fade time for the subordinate channel functions to change DMX values by the control
     /// system.
@@ -567,7 +567,7 @@ pub struct LogicalChannel {
     ///
     /// Corresponds to the `DMXChangeTimeLimit` XML attribute.
     #[serde(rename = "@DMXChangeTimeLimit", default)]
-    pub dmx_change_time_limit: f32,
+    pub dmx_change_time_limit: f64,
 
     /// A list of channel functions defining the function of each DMX range.
     ///
@@ -745,7 +745,7 @@ pub struct ChannelFunction {
         rename = "@PhysicalFrom",
         default = "default_channel_function_physical_from"
     )]
-    pub physical_from: f32,
+    pub physical_from: f64,
 
     /// Physical end value.
     ///
@@ -754,19 +754,19 @@ pub struct ChannelFunction {
         rename = "@PhysicalTo",
         default = "default_channel_function_physical_to"
     )]
-    pub physical_to: f32,
+    pub physical_to: f64,
 
     /// Time in seconds to move from min to max of the channel function.
     ///
     /// Corresponds to the `RealFade` XML attribute.
     #[serde(rename = "@RealFade", default)]
-    pub real_fade: f32,
+    pub real_fade: f64,
 
     /// Time in seconds to accelerate from stop to maximum velocity.
     ///
     /// Corresponds to the `RealAcceleration` XML attribute.
     #[serde(rename = "@RealAcceleration", default)]
-    pub real_acceleration: f32,
+    pub real_acceleration: f64,
 
     /// Optional link to a wheel.
     ///
@@ -820,7 +820,7 @@ pub struct ChannelFunction {
     ///
     /// Corresponds to the `Min` XML attribute.
     #[serde(rename = "@Min", skip_serializing_if = "Option::is_none")]
-    pub min: Option<f32>,
+    pub min: Option<f64>,
 
     /// Maximum physical value that will be used for the DMX profile.
     ///
@@ -828,7 +828,7 @@ pub struct ChannelFunction {
     ///
     /// Corresponds to the `Max` XML attribute.
     #[serde(rename = "@Max", skip_serializing_if = "Option::is_none")]
-    pub max: Option<f32>,
+    pub max: Option<f64>,
 
     /// Custom name that can be used to address this channel function with other command-based
     /// protocols like OSC.
@@ -907,13 +907,13 @@ impl ChannelFunction {
 
     /// Returns the minimum physical value that will be used for the DMX profile, or the physical
     /// start value if a minimum is not set.
-    pub fn min(&self) -> f32 {
+    pub fn min(&self) -> f64 {
         self.min.unwrap_or(self.physical_from)
     }
 
     /// Returns the maximum physical value that will be used for the DMX profile, or the physical
     /// end value if a maximum is not set.
-    pub fn max(&self) -> f32 {
+    pub fn max(&self) -> f64 {
         self.max.unwrap_or(self.physical_to)
     }
 
@@ -1043,10 +1043,10 @@ impl ChannelFunction {
 fn default_channel_function_attribute() -> Node {
     Node::new(vec![Name::new("NoFeature").unwrap()])
 }
-fn default_channel_function_physical_from() -> f32 {
+fn default_channel_function_physical_from() -> f64 {
     0.
 }
-fn default_channel_function_physical_to() -> f32 {
+fn default_channel_function_physical_to() -> f64 {
     1.
 }
 
@@ -1132,7 +1132,7 @@ pub struct ChannelSet {
     ///
     /// Corresponds to the `PhysicalFrom` XML attribute.
     #[serde(rename = "@PhysicalFrom", skip_serializing_if = "Option::is_none")]
-    pub physical_from: Option<f32>,
+    pub physical_from: Option<f64>,
 
     /// Physical end value.
     ///
@@ -1140,7 +1140,7 @@ pub struct ChannelSet {
     ///
     /// Corresponds to the `PhysicalTo` XML attribute.
     #[serde(rename = "@PhysicalTo", skip_serializing_if = "Option::is_none")]
-    pub physical_to: Option<f32>,
+    pub physical_to: Option<f64>,
 
     /// If the channel function has a link to a wheel, specifies the corresponding slot index.
     ///
@@ -1161,14 +1161,14 @@ pub struct ChannelSet {
 impl ChannelSet {
     /// Returns the physical start value of the channel set, or the physical start value of the
     /// parent channel function if no value is provided.
-    pub fn physical_from(&self, parent_channel_function: &ChannelFunction) -> f32 {
+    pub fn physical_from(&self, parent_channel_function: &ChannelFunction) -> f64 {
         self.physical_from
             .unwrap_or(parent_channel_function.physical_from)
     }
 
     /// Returns the physical end value of the channel set, or the physical end value of the parent
     /// channel function if no value is provided.
-    pub fn physical_to(&self, parent_channel_function: &ChannelFunction) -> f32 {
+    pub fn physical_to(&self, parent_channel_function: &ChannelFunction) -> f64 {
         self.physical_to
             .unwrap_or(parent_channel_function.physical_to)
     }
@@ -1241,13 +1241,13 @@ pub struct SubChannelSet {
     ///
     /// Corresponds to the `PhysicalFrom` XML attribute.
     #[serde(rename = "@PhysicalFrom")]
-    pub physical_from: f32,
+    pub physical_from: f64,
 
     /// Physical end value.
     ///
     /// Corresponds to the `PhysicalTo` XML attribute.
     #[serde(rename = "@PhysicalTo")]
-    pub physical_to: f32,
+    pub physical_to: f64,
 
     /// Link to the sub physical unit.
     ///
@@ -1543,7 +1543,7 @@ pub struct MacroDmxStep {
     ///
     /// Corresponds to the `Duration` XML attribute.
     #[serde(rename = "@Duration", default = "default_macro_dmx_step_duration")]
-    pub duration: f32,
+    pub duration: f64,
 
     /// Values to apply in this step.
     ///
@@ -1556,7 +1556,7 @@ pub struct MacroDmxStep {
     pub values: Vec<MacroDmxValue>,
 }
 
-fn default_macro_dmx_step_duration() -> f32 {
+fn default_macro_dmx_step_duration() -> f64 {
     1.
 }
 

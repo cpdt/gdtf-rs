@@ -246,7 +246,7 @@ pub struct AnimationSystem {
         serialize_with = "serialize_xy_array",
         deserialize_with = "deserialize_xy_array"
     )]
-    pub p1: [f32; 2],
+    pub p1: [f64; 2],
 
     /// Second point of the spline as an X and Y value.
     ///
@@ -256,7 +256,7 @@ pub struct AnimationSystem {
         serialize_with = "serialize_xy_array",
         deserialize_with = "deserialize_xy_array"
     )]
-    pub p2: [f32; 2],
+    pub p2: [f64; 2],
 
     /// Third point of the spline as an X and Y value.
     ///
@@ -266,31 +266,31 @@ pub struct AnimationSystem {
         serialize_with = "serialize_xy_array",
         deserialize_with = "deserialize_xy_array"
     )]
-    pub p3: [f32; 2],
+    pub p3: [f64; 2],
 
     /// Radius of the circle that defines the section of the media file which will be shown in the
     /// beam.
     ///
     /// Corresponds to the `Radius` XML attribute.
     #[serde(rename = "@Radius")]
-    pub radius: f32,
+    pub radius: f64,
 }
 
-fn serialize_xy_array<S>(value: &[f32; 2], serializer: S) -> Result<S::Ok, S::Error>
+fn serialize_xy_array<S>(value: &[f64; 2], serializer: S) -> Result<S::Ok, S::Error>
 where
     S: Serializer,
 {
     serializer.serialize_str(&format!("{},{}", value[0], value[1]))
 }
 
-fn deserialize_xy_array<'de, D>(deserializer: D) -> Result<[f32; 2], D::Error>
+fn deserialize_xy_array<'de, D>(deserializer: D) -> Result<[f64; 2], D::Error>
 where
     D: Deserializer<'de>,
 {
     struct XyArrayVisitor;
 
     impl<'de> Visitor<'de> for XyArrayVisitor {
-        type Value = [f32; 2];
+        type Value = [f64; 2];
 
         fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
             formatter.write_str("a floating point array in the format float,float")
@@ -301,7 +301,7 @@ where
             E: Error,
         {
             let values = v.split(',').map(|value_str| {
-                value_str.trim().parse::<f32>().map_err(|_| {
+                value_str.trim().parse::<f64>().map_err(|_| {
                     E::invalid_value(Unexpected::Str(value_str), &"a floating point number")
                 })
             });

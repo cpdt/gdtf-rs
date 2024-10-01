@@ -469,13 +469,13 @@ pub struct SubPhysicalUnit {
     ///
     /// Corresponds to the `PhysicalFrom` XML attribute.
     #[serde(rename = "@PhysicalFrom", default = "physical_from_default")]
-    pub physical_from: f32,
+    pub physical_from: f64,
 
     /// The default physical to of the subphysical unit.
     ///
     /// Corresponds to the `PhysicalTo` XML attribute.
     #[serde(rename = "@PhysicalTo", default = "physical_to_default")]
-    pub physical_to: f32,
+    pub physical_to: f64,
 }
 
 /// Valid types of a [SubPhysicalUnit].
@@ -573,10 +573,10 @@ impl Display for SubPhysicalUnitType {
     }
 }
 
-fn physical_from_default() -> f32 {
+fn physical_from_default() -> f64 {
     0.
 }
-fn physical_to_default() -> f32 {
+fn physical_to_default() -> f64 {
     1.
 }
 

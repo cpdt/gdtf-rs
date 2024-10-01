@@ -97,7 +97,7 @@ pub enum ValidationErrorType {
     EmptyProfile,
 
     /// Profile had a duplicate point.
-    DuplicatePoint(f32),
+    DuplicatePoint(f64),
 
     /// CRI group had a duplicate sample.
     DuplicateCriSample(Ces),

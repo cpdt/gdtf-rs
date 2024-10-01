@@ -23,19 +23,19 @@ pub struct Model {
     ///
     /// Corresponds to the `Length` XML attribute.
     #[serde(rename = "@Length", default)]
-    pub length: f32,
+    pub length: f64,
 
     /// Width of the model in meters.
     ///
     /// Corresponds to the `Width` XML attribute.
     #[serde(rename = "@Width", default)]
-    pub width: f32,
+    pub width: f64,
 
     /// Height of the model in meters.
     ///
     /// Corresponds to the `Height` XML attribute.
     #[serde(rename = "@Height", default)]
-    pub height: f32,
+    pub height: f64,
 
     /// Type of 3D model.
     ///
@@ -76,37 +76,37 @@ pub struct Model {
     ///
     /// Corresponds to the `SVGOffsetX` XML attribute.
     #[serde(rename = "@SVGOffsetX", default)]
-    pub svg_offset_x: f32,
+    pub svg_offset_x: f64,
 
     /// Offset on the Y axis from 0,0 to the desired insertion point of the top view SVG.
     ///
     /// Corresponds to the `SVGOffsetY` XML attribute.
     #[serde(rename = "@SVGOffsetY", default)]
-    pub svg_offset_y: f32,
+    pub svg_offset_y: f64,
 
     /// Offset on the X axis from 0,0 to the desired insertion point of the side view SVG.
     ///
     /// Corresponds to the `SVGSideOffsetX` XML attribute.
     #[serde(rename = "@SVGSideOffsetX", default)]
-    pub svg_side_offset_x: f32,
+    pub svg_side_offset_x: f64,
 
     /// Offset on the Y axis from 0,0 to the desired insertion point of the side view SVG.
     ///
     /// Corresponds to the `SVGSideOffsetY` XML attribute.
     #[serde(rename = "@SVGSideOffsetY", default)]
-    pub svg_side_offset_y: f32,
+    pub svg_side_offset_y: f64,
 
     /// Offset on the X axis from 0,0 to the desired insertion point of the front view SVG.
     ///
     /// Corresponds to the `SVGFrontOffsetX` XML attribute.
     #[serde(rename = "@SVGFrontOffsetX", default)]
-    pub svg_front_offset_x: f32,
+    pub svg_front_offset_x: f64,
 
     /// Offset on the Y axis from 0,0 to the desired insertion point of the front view SVG.
     ///
     /// Corresponds to the `SVGFrontOffsetY` XML attribute.
     #[serde(rename = "@SVGFrontOffsetY", default)]
-    pub svg_front_offset_y: f32,
+    pub svg_front_offset_y: f64,
 }
 
 impl Model {

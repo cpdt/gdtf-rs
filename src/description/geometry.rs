@@ -94,6 +94,9 @@ pub trait AnyGeometry {
 /// Defines the physical description of a device's parts.
 ///
 /// Geometry is organised in a tree with each geometry having zero or more child geometries.
+// Clippy generates a false positive for `large_enum_variant` due to recursive types.
+// See https://github.com/rust-lang/rust-clippy/issues/9798
+#[allow(clippy::large_enum_variant)]
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum Geometry {
     /// Basic geometry without specification.
@@ -509,51 +512,51 @@ pub struct BeamGeometry {
     ///
     /// Corresponds to the `PowerConsumption` XML attribute.
     #[serde(rename = "@PowerConsumption", default = "default_power_consumption")]
-    pub power_consumption: f32,
+    pub power_consumption: f64,
 
     /// Intensity of all the represented light emitters in lumens.
     ///
     /// Corresponds to the `LuminousFlux` XML attribute.
     #[serde(rename = "@LuminousFlux", default = "default_luminous_flux")]
-    pub luminous_flux: f32,
+    pub luminous_flux: f64,
 
     /// Color temperature in kelvin.
     ///
     /// Corresponds to the `ColorTemperature` XML attribute.
     #[serde(rename = "@ColorTemperature", default = "default_color_temperature")]
-    pub color_temperature: f32,
+    pub color_temperature: f64,
 
     /// The angle of the light output at which the intensity is 50% of the maximum intensity
     /// corresponding to the center of the beam.
     ///
     /// Corresponds to the `BeamAngle` XML attribute.
     #[serde(rename = "@BeamAngle", default = "default_beam_angle")]
-    pub beam_angle: f32,
+    pub beam_angle: f64,
 
     /// The angle of the light output at which the intensity is 10% of the maximum intensity
     /// corresponding to the center of the beam.
     ///
     /// Corresponds to the `FieldAngle` XML attribute.
     #[serde(rename = "@FieldAngle", default = "default_field_angle")]
-    pub field_angle: f32,
+    pub field_angle: f64,
 
     /// Throw ratio of the lens for rectangle beam types.
     ///
     /// Corresponds to the `ThrowRatio` XML attribute.
     #[serde(rename = "@ThrowRatio", default = "default_throw_ratio")]
-    pub throw_ratio: f32,
+    pub throw_ratio: f64,
 
     /// Ratio from width to height of rectangle beam types.
     ///
     /// Corresponds to the `RectangleRatio` XML attribute.
     #[serde(rename = "@RectangleRatio", default = "default_rectangle_ratio")]
-    pub rectangle_ratio: f32,
+    pub rectangle_ratio: f64,
 
     /// Defines the radius of the light output of the lamp instance.
     ///
     /// Corresponds to the `BeamRadius` XML attribute.
     #[serde(rename = "@BeamRadius", default = "default_beam_radius")]
-    pub beam_radius: f32,
+    pub beam_radius: f64,
 
     /// Describes how the beam will be rendered.
     ///
@@ -622,7 +625,7 @@ impl BeamGeometry {
     }
 }
 
-fn default_color_temperature() -> f32 {
+fn default_color_temperature() -> f64 {
     6000.
 }
 fn default_color_rendering_index() -> u8 {
@@ -960,7 +963,7 @@ pub struct LaserGeometry {
     ///
     /// Corresponds to the `OutputStrength` XML attribute.
     #[serde(rename = "@OutputStrength")]
-    pub output_strength: f32,
+    pub output_strength: f64,
 
     /// Optional link to the emitter group.
     ///
@@ -972,37 +975,37 @@ pub struct LaserGeometry {
     ///
     /// Corresponds to the `BeamDiameter` XML attribute.
     #[serde(rename = "@BeamDiameter")]
-    pub beam_diameter: f32,
+    pub beam_diameter: f64,
 
     /// Minimum beam divergence in milliradians.
     ///
     /// Corresponds to the `BeamDivergenceMin` XML attribute.
     #[serde(rename = "@BeamDivergenceMin")]
-    pub beam_divergence_min: f32,
+    pub beam_divergence_min: f64,
 
     /// Maximum beam divergence in milliradians.
     ///
     /// Corresponds to the `BeamDivergenceMax` XML attribute.
     #[serde(rename = "@BeamDivergenceMax")]
-    pub beam_divergence_max: f32,
+    pub beam_divergence_max: f64,
 
     /// Possible total scan angle pan of the beam in degrees.
     ///
     /// Corresponds to the `ScanAnglePan` XML attribute.
     #[serde(rename = "@ScanAnglePan")]
-    pub scan_angle_pan: f32,
+    pub scan_angle_pan: f64,
 
     /// Possible total scan angle tilt of the beam in degrees.
     ///
     /// Corresponds to the `ScanAngleTilt` XML attribute.
     #[serde(rename = "@ScanAngleTilt")]
-    pub scan_angle_tilt: f32,
+    pub scan_angle_tilt: f64,
 
     /// Speed of the beam in kilo points per second.
     ///
     /// Corresponds to the `ScanSpeed` XML attribute.
     #[serde(rename = "@ScanSpeed")]
-    pub scan_speed: f32,
+    pub scan_speed: f64,
 
     /// Supported protocols of the laser.
     ///
@@ -1068,7 +1071,7 @@ pub enum ColorType {
         ///
         /// Corresponds to the `Color` XML attribute.
         #[serde(rename = "@Color", deserialize_with = "Parse::deserialize")]
-        f32,
+        f64,
     ),
 
     /// The laser geometry emits an additive RGB color.
@@ -1210,7 +1213,7 @@ pub enum ComponentType {
             skip_serializing_if = "Option::is_none",
             deserialize_with = "Parse::deserialize"
         )]
-        max_pay_load: Option<f32>,
+        max_pay_load: Option<f64>,
 
         /// The voltage output that this power source can handle in volts.
         ///
@@ -1222,7 +1225,7 @@ pub enum ComponentType {
             skip_serializing_if = "Option::is_none",
             deserialize_with = "Parse::deserialize"
         )]
-        voltage: Option<f32>,
+        voltage: Option<f64>,
     },
 
     /// Consumer component.
@@ -1237,7 +1240,7 @@ pub enum ComponentType {
             skip_serializing_if = "Option::is_none",
             deserialize_with = "Parse::deserialize"
         )]
-        electrical_pay_load: Option<f32>,
+        electrical_pay_load: Option<f64>,
 
         /// The voltage range's maximum value in volts.
         ///
@@ -1249,7 +1252,7 @@ pub enum ComponentType {
             skip_serializing_if = "Option::is_none",
             deserialize_with = "Parse::deserialize"
         )]
-        voltage_range_max: Option<f32>,
+        voltage_range_max: Option<f64>,
 
         /// The voltage range's minimum value in volts.
         ///
@@ -1261,7 +1264,7 @@ pub enum ComponentType {
             skip_serializing_if = "Option::is_none",
             deserialize_with = "Parse::deserialize"
         )]
-        voltage_range_min: Option<f32>,
+        voltage_range_min: Option<f64>,
 
         /// The frequency range's maximum value in hertz.
         ///
@@ -1273,7 +1276,7 @@ pub enum ComponentType {
             skip_serializing_if = "Option::is_none",
             deserialize_with = "Parse::deserialize"
         )]
-        frequency_range_max: Option<f32>,
+        frequency_range_max: Option<f64>,
 
         /// The frequency range's minimum value in hertz.
         ///
@@ -1285,7 +1288,7 @@ pub enum ComponentType {
             skip_serializing_if = "Option::is_none",
             deserialize_with = "Parse::deserialize"
         )]
-        frequency_range_min: Option<f32>,
+        frequency_range_min: Option<f64>,
 
         /// The Power Factor of the device.
         ///
@@ -1297,7 +1300,7 @@ pub enum ComponentType {
             skip_serializing_if = "Option::is_none",
             deserialize_with = "Parse::deserialize"
         )]
-        cos_phi: Option<f32>,
+        cos_phi: Option<f64>,
     },
 
     /// Fuse component.
@@ -1312,7 +1315,7 @@ pub enum ComponentType {
             skip_serializing_if = "Option::is_none",
             deserialize_with = "Parse::deserialize"
         )]
-        fuse_current: Option<f32>,
+        fuse_current: Option<f64>,
 
         /// Fuse rating.
         ///
@@ -1550,7 +1553,7 @@ pub enum CrossSectionType {
             rename = "@CrossSectionHeight",
             deserialize_with = "Parse::deserialize"
         )]
-        height: f32,
+        height: f64,
 
         /// The thickness of the wall of the cross section.
         ///
@@ -1559,7 +1562,7 @@ pub enum CrossSectionType {
             rename = "@CrossSectionWallThickness",
             deserialize_with = "Parse::deserialize"
         )]
-        wall_thickness: f32,
+        wall_thickness: f64,
     },
 }
 
@@ -1602,40 +1605,40 @@ pub struct SupportGeometry {
     ///
     /// Corresponds to the `CapacityX` XML attribute.
     #[serde(rename = "@CapacityX")]
-    pub capacity_x: f32,
+    pub capacity_x: f64,
 
     /// The allowable force on the Y-axis applied to the object according to the Eurocode, in N.
     ///
     /// Corresponds to the `CapacityY` XML attribute.
     #[serde(rename = "@CapacityY")]
-    pub capacity_y: f32,
+    pub capacity_y: f64,
 
     /// The allowable force on the Z-axis applied to the object according to the Eurocode, in N.
     ///
     /// Corresponds to the `CapacityZ` XML attribute.
     #[serde(rename = "@CapacityZ")]
-    pub capacity_z: f32,
+    pub capacity_z: f64,
 
     /// The allowable moment around the X-axis applied to the object according to the Eurocode, in
     /// N/m.
     ///
     /// Corresponds to the `CapacityXX` XML attribute.
     #[serde(rename = "@CapacityXX")]
-    pub capacity_xx: f32,
+    pub capacity_xx: f64,
 
     /// The allowable moment around the Y-axis applied to the object according to the Eurocode, in
     /// N/m.
     ///
     /// Corresponds to the `CapacityYY` XML attribute.
     #[serde(rename = "@CapacityYY")]
-    pub capacity_yy: f32,
+    pub capacity_yy: f64,
 
     /// The allowable moment around the Z-axis applied to the object according to the Eurocode, in
     /// N/m.
     ///
     /// Corresponds to the `CapacityZZ` XML attribute.
     #[serde(rename = "@CapacityZZ")]
-    pub capacity_zz: f32,
+    pub capacity_zz: f64,
 }
 
 impl_any_geometry!(SupportGeometry);
@@ -1665,37 +1668,37 @@ pub enum SupportType {
         ///
         /// Corresponds to the `ResistanceX` XML attribute.
         #[serde(rename = "@ResistanceX", deserialize_with = "Parse::deserialize")]
-        resistance_x: f32,
+        resistance_x: f64,
 
         /// The compression ratio for this support along the Y-axis in N/m.
         ///
         /// Corresponds to the `ResistanceY` XML attribute.
         #[serde(rename = "@ResistanceY", deserialize_with = "Parse::deserialize")]
-        resistance_y: f32,
+        resistance_y: f64,
 
         /// The compression ratio for this support along the Z-axis in N/m.
         ///
         /// Corresponds to the `ResistanceZ` XML attribute.
         #[serde(rename = "@ResistanceZ", deserialize_with = "Parse::deserialize")]
-        resistance_z: f32,
+        resistance_z: f64,
 
         /// The compression ratio for this support around the X-axis in N/m.
         ///
         /// Corresponds to the `ResistanceXX` XML attribute.
         #[serde(rename = "@ResistanceXX", deserialize_with = "Parse::deserialize")]
-        resistance_xx: f32,
+        resistance_xx: f64,
 
         /// The compression ratio for this support around the Y-axis in N/m.
         ///
         /// Corresponds to the `ResistanceYY` XML attribute.
         #[serde(rename = "@ResistanceYY", deserialize_with = "Parse::deserialize")]
-        resistance_yy: f32,
+        resistance_yy: f64,
 
         /// The compression ratio for this support around the Z-axis in N/m.
         ///
         /// Corresponds to the `ResistanceZZ` XML attribute.
         #[serde(rename = "@ResistanceZZ", deserialize_with = "Parse::deserialize")]
-        resistance_zz: f32,
+        resistance_zz: f64,
     },
 }
 
@@ -1733,25 +1736,25 @@ pub struct MagnetGeometry {
 
 impl_any_geometry!(MagnetGeometry);
 
-fn default_power_consumption() -> f32 {
+fn default_power_consumption() -> f64 {
     1000.
 }
-fn default_luminous_flux() -> f32 {
+fn default_luminous_flux() -> f64 {
     10000.
 }
-fn default_beam_angle() -> f32 {
+fn default_beam_angle() -> f64 {
     25.
 }
-fn default_field_angle() -> f32 {
+fn default_field_angle() -> f64 {
     25.
 }
-fn default_throw_ratio() -> f32 {
+fn default_throw_ratio() -> f64 {
     1.
 }
-fn default_rectangle_ratio() -> f32 {
+fn default_rectangle_ratio() -> f64 {
     1.7777
 }
-fn default_beam_radius() -> f32 {
+fn default_beam_radius() -> f64 {
     0.05
 }
 
