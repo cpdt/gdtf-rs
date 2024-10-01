@@ -1,5 +1,6 @@
 //! Describes the physical constitution of a device.
 
+use crate::description::parse_helper::Parse;
 use crate::description::util::IterUtil;
 use crate::validation::{ValidationError, ValidationErrorType, ValidationObject, ValidationResult};
 use crate::values::{non_empty_string, ColorCie, Name};
@@ -357,11 +358,16 @@ pub enum EmitterOptic {
         /// Corresponds to the `Color` XML attribute.
         #[serde(rename = "@Color")]
         color: ColorCie,
-        ///// Optional dominant wavelength of the LED.
-        /////
-        ///// Corresponds to the `DominantWaveLength` XML attribute.
-        //#[serde(rename = "@DominantWaveLength", skip_serializing_if = "Option::is_none")]
-        //dominant_wave_length: Option<f32>,
+
+        /// Optional dominant wavelength of the LED.
+        ///
+        /// Corresponds to the `DominantWaveLength` XML attribute.
+        #[serde(
+            rename = "@DominantWaveLength",
+            skip_serializing_if = "Option::is_none",
+            deserialize_with = "Parse::deserialize"
+        )]
+        dominant_wave_length: Option<f32>,
     },
 
     /// Defines the optics of the emitter in terms of a dominant wavelength.

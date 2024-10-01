@@ -1,5 +1,6 @@
 //! Physical descriptions of the individual parts of a device.
 
+use crate::description::parse_helper::Parse;
 use crate::description::util::IterUtil;
 use crate::fixture_type::FixtureType;
 use crate::model::Model;
@@ -1066,7 +1067,7 @@ pub enum ColorType {
         /// Color in nanometers.
         ///
         /// Corresponds to the `Color` XML attribute.
-        #[serde(rename = "@Color")]
+        #[serde(rename = "@Color", deserialize_with = "Parse::deserialize")]
         f32,
     ),
 
@@ -1204,7 +1205,11 @@ pub enum ComponentType {
         /// Only for Power Source connector types.
         ///
         /// Corresponds to the `MaxPayLoad` XML attribute.
-        #[serde(rename = "@MaxPayLoad", skip_serializing_if = "Option::is_none")]
+        #[serde(
+            rename = "@MaxPayLoad",
+            skip_serializing_if = "Option::is_none",
+            deserialize_with = "Parse::deserialize"
+        )]
         max_pay_load: Option<f32>,
 
         /// The voltage output that this power source can handle in volts.
@@ -1212,7 +1217,11 @@ pub enum ComponentType {
         /// Only for Power Source connector types.
         ///
         /// Corresponds to the `Voltage` XML attribute.
-        #[serde(rename = "@Voltage")]
+        #[serde(
+            rename = "@Voltage",
+            skip_serializing_if = "Option::is_none",
+            deserialize_with = "Parse::deserialize"
+        )]
         voltage: Option<f32>,
     },
 
@@ -1223,7 +1232,11 @@ pub enum ComponentType {
         /// Only for Consumer connector types.
         ///
         /// Corresponds to the `ElectricalPayLoad` XML attribute.
-        #[serde(rename = "@ElectricalPayLoad", skip_serializing_if = "Option::is_none")]
+        #[serde(
+            rename = "@ElectricalPayLoad",
+            skip_serializing_if = "Option::is_none",
+            deserialize_with = "Parse::deserialize"
+        )]
         electrical_pay_load: Option<f32>,
 
         /// The voltage range's maximum value in volts.
@@ -1231,7 +1244,11 @@ pub enum ComponentType {
         /// Only for Consumer connector types.
         ///
         /// Corresponds to the `VoltageRangeMax` XML attribute.
-        #[serde(rename = "@VoltageRangeMax", skip_serializing_if = "Option::is_none")]
+        #[serde(
+            rename = "@VoltageRangeMax",
+            skip_serializing_if = "Option::is_none",
+            deserialize_with = "Parse::deserialize"
+        )]
         voltage_range_max: Option<f32>,
 
         /// The voltage range's minimum value in volts.
@@ -1239,7 +1256,11 @@ pub enum ComponentType {
         /// Only for Consumer connector types.
         ///
         /// Corresponds to the `VoltageRangeMin` XML attribute.
-        #[serde(rename = "@VoltageRangeMin", skip_serializing_if = "Option::is_none")]
+        #[serde(
+            rename = "@VoltageRangeMin",
+            skip_serializing_if = "Option::is_none",
+            deserialize_with = "Parse::deserialize"
+        )]
         voltage_range_min: Option<f32>,
 
         /// The frequency range's maximum value in hertz.
@@ -1247,7 +1268,11 @@ pub enum ComponentType {
         /// Only for Consumer connector types.
         ///
         /// Corresponds to the `FrequencyRangeMax` XML attribute.
-        #[serde(rename = "@FrequencyRangeMax", skip_serializing_if = "Option::is_none")]
+        #[serde(
+            rename = "@FrequencyRangeMax",
+            skip_serializing_if = "Option::is_none",
+            deserialize_with = "Parse::deserialize"
+        )]
         frequency_range_max: Option<f32>,
 
         /// The frequency range's minimum value in hertz.
@@ -1255,7 +1280,11 @@ pub enum ComponentType {
         /// Only for Consumer connector types.
         ///
         /// Corresponds to the `FrequencyRangeMin` XML attribute.
-        #[serde(rename = "@FrequencyRangeMin", skip_serializing_if = "Option::is_none")]
+        #[serde(
+            rename = "@FrequencyRangeMin",
+            skip_serializing_if = "Option::is_none",
+            deserialize_with = "Parse::deserialize"
+        )]
         frequency_range_min: Option<f32>,
 
         /// The Power Factor of the device.
@@ -1263,7 +1292,11 @@ pub enum ComponentType {
         /// Only for Consumer connector types.
         ///
         /// Corresponds to the `CosPhi` XML attribute.
-        #[serde(rename = "@CosPhi", skip_serializing_if = "Option::is_none")]
+        #[serde(
+            rename = "@CosPhi",
+            skip_serializing_if = "Option::is_none",
+            deserialize_with = "Parse::deserialize"
+        )]
         cos_phi: Option<f32>,
     },
 
@@ -1274,7 +1307,11 @@ pub enum ComponentType {
         /// Only for Fuse connector types.
         ///
         /// Corresponds to the `FuseCurrent` XML attribute.
-        #[serde(rename = "@FuseCurrent", skip_serializing_if = "Option::is_none")]
+        #[serde(
+            rename = "@FuseCurrent",
+            skip_serializing_if = "Option::is_none",
+            deserialize_with = "Parse::deserialize"
+        )]
         fuse_current: Option<f32>,
 
         /// Fuse rating.
@@ -1509,13 +1546,19 @@ pub enum CrossSectionType {
         /// The height of the cross section.
         ///
         /// Corresponds to the `CrossSectionHeight` XML attribute.
-        #[serde(rename = "@CrossSectionHeight")]
+        #[serde(
+            rename = "@CrossSectionHeight",
+            deserialize_with = "Parse::deserialize"
+        )]
         height: f32,
 
         /// The thickness of the wall of the cross section.
         ///
         /// Corresponds to the `CrossSectionWallThickness` XML attribute.
-        #[serde(rename = "@CrossSectionWallThickness")]
+        #[serde(
+            rename = "@CrossSectionWallThickness",
+            deserialize_with = "Parse::deserialize"
+        )]
         wall_thickness: f32,
     },
 }
@@ -1621,37 +1664,37 @@ pub enum SupportType {
         /// The compression ratio for this support along the X-axis in N/m.
         ///
         /// Corresponds to the `ResistanceX` XML attribute.
-        #[serde(rename = "@ResistanceX")]
+        #[serde(rename = "@ResistanceX", deserialize_with = "Parse::deserialize")]
         resistance_x: f32,
 
         /// The compression ratio for this support along the Y-axis in N/m.
         ///
         /// Corresponds to the `ResistanceY` XML attribute.
-        #[serde(rename = "@ResistanceY")]
+        #[serde(rename = "@ResistanceY", deserialize_with = "Parse::deserialize")]
         resistance_y: f32,
 
         /// The compression ratio for this support along the Z-axis in N/m.
         ///
         /// Corresponds to the `ResistanceZ` XML attribute.
-        #[serde(rename = "@ResistanceZ")]
+        #[serde(rename = "@ResistanceZ", deserialize_with = "Parse::deserialize")]
         resistance_z: f32,
 
         /// The compression ratio for this support around the X-axis in N/m.
         ///
         /// Corresponds to the `ResistanceXX` XML attribute.
-        #[serde(rename = "@ResistanceXX")]
+        #[serde(rename = "@ResistanceXX", deserialize_with = "Parse::deserialize")]
         resistance_xx: f32,
 
         /// The compression ratio for this support around the Y-axis in N/m.
         ///
         /// Corresponds to the `ResistanceYY` XML attribute.
-        #[serde(rename = "@ResistanceYY")]
+        #[serde(rename = "@ResistanceYY", deserialize_with = "Parse::deserialize")]
         resistance_yy: f32,
 
         /// The compression ratio for this support around the Z-axis in N/m.
         ///
         /// Corresponds to the `ResistanceZZ` XML attribute.
-        #[serde(rename = "@ResistanceZZ")]
+        #[serde(rename = "@ResistanceZZ", deserialize_with = "Parse::deserialize")]
         resistance_zz: f32,
     },
 }

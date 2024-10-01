@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 
 #[macro_use]
 mod collect_helper;
+mod parse_helper;
 mod util;
 
 pub mod attribute;
