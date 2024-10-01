@@ -36,7 +36,7 @@ cargo add gdtf
 Or add the following line to your Cargo.toml:
 
 ```toml
-gdtf = "0.1"
+gdtf = "0.2"
 ```
 
 ## Example
