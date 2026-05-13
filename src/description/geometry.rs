@@ -570,11 +570,15 @@ pub struct BeamGeometry {
     /// compared to a daylight reference.
     ///
     /// Corresponds to the `ColorRenderingIndex` XML attribute.
+    /// Widened from `u8` to `u32` because real-world fixtures occasionally
+    /// ship CRI values well above 255 (the spec range is 0-100; values like
+    /// 6631 appear in MegaLite fixtures). Accepting the raw number keeps the
+    /// file parseable; validation can flag out-of-range values separately.
     #[serde(
         rename = "@ColorRenderingIndex",
         default = "default_color_rendering_index"
     )]
-    pub color_rendering_index: u8,
+    pub color_rendering_index: u32,
 
     /// Optional link to an emitter defining the white light source of a subtractive color mixing
     /// system.
@@ -628,7 +632,7 @@ impl BeamGeometry {
 fn default_color_temperature() -> f64 {
     6000.
 }
-fn default_color_rendering_index() -> u8 {
+fn default_color_rendering_index() -> u32 {
     100
 }
 
@@ -953,11 +957,28 @@ pub struct LaserGeometry {
     #[serde(rename = "$value", skip_serializing_if = "Vec::is_empty", default)]
     pub children: Vec<Geometry>,
 
-    /// Type of color emitted by the laser.
+    /// Discriminator for the type of color emitted by the laser.
     ///
-    /// Corresponds to the `ColorType` XML attribute.
-    #[serde(flatten, default)]
-    pub color_type: ColorType,
+    /// Corresponds to the `ColorType` XML attribute. Use [`color_type`] to
+    /// access a structured view that pairs this with [`color_wavelength`].
+    ///
+    /// [`color_type`]: LaserGeometry::color_type
+    /// [`color_wavelength`]: LaserGeometry::color_wavelength
+    #[serde(rename = "@ColorType", default)]
+    pub color_type_kind: LaserColorTypeKind,
+
+    /// Wavelength in nanometers when [`color_type_kind`] is
+    /// [`SingleWaveLength`]. Ignored otherwise.
+    ///
+    /// Corresponds to the `Color` XML attribute on `<Laser>`. The previous
+    /// internally-tagged enum field paired this with `@ColorType` via
+    /// `#[serde(flatten)]`, which fails on quick-xml's attribute map; flat
+    /// fields are required.
+    ///
+    /// [`color_type_kind`]: LaserGeometry::color_type_kind
+    /// [`SingleWaveLength`]: LaserColorTypeKind::SingleWaveLength
+    #[serde(rename = "@Color", default, skip_serializing_if = "Option::is_none")]
+    pub color_wavelength: Option<f64>,
 
     /// Output strength of the laser in watts.
     ///
@@ -1059,25 +1080,52 @@ impl LaserGeometry {
         let name = self.emitter.as_ref()?.single()?;
         parent_fixture_type.physical_descriptions.emitter(name)
     }
+
+    /// Structured view of the laser's color, composed from
+    /// [`color_type_kind`](Self::color_type_kind) and
+    /// [`color_wavelength`](Self::color_wavelength).
+    pub fn color_type(&self) -> ColorType {
+        match self.color_type_kind {
+            LaserColorTypeKind::SingleWaveLength => {
+                ColorType::SingleWaveLength(self.color_wavelength.unwrap_or(0.0))
+            }
+            LaserColorTypeKind::Rgb => ColorType::Rgb,
+        }
+    }
 }
 
-/// Type of color emitted by a laser represented by a [LaserGeometry].
-#[derive(Debug, Clone, Copy, PartialEq, Default, Serialize, Deserialize)]
-#[serde(tag = "@ColorType")]
+/// On-disk discriminator for [LaserGeometry] color encoding.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+pub enum LaserColorTypeKind {
+    /// The laser geometry emits an additive RGB color (default per GDTF spec).
+    #[default]
+    #[serde(rename = "RGB")]
+    Rgb,
+
+    /// The laser geometry emits a single wavelength specified in
+    /// [`LaserGeometry::color_wavelength`].
+    #[serde(rename = "SingleWaveLength")]
+    SingleWaveLength,
+}
+
+/// Structured view of the color emitted by a laser represented by a [LaserGeometry].
+///
+/// Build with [`LaserGeometry::color_type`]. Not (de)serialized directly;
+/// the on-disk representation is [`LaserColorTypeKind`] +
+/// [`LaserGeometry::color_wavelength`].
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum ColorType {
-    /// The laser geometry emits a single wavelength only.
-    SingleWaveLength(
-        /// Color in nanometers.
-        ///
-        /// Corresponds to the `Color` XML attribute.
-        #[serde(rename = "@Color", deserialize_with = "Parse::deserialize")]
-        f64,
-    ),
+    /// The laser geometry emits a single wavelength (nanometers).
+    SingleWaveLength(f64),
 
     /// The laser geometry emits an additive RGB color.
-    #[default]
-    #[serde(other, rename = "RGB")]
     Rgb,
+}
+
+impl Default for ColorType {
+    fn default() -> Self {
+        ColorType::Rgb
+    }
 }
 
 /// Defines device parts with an electrical device that can be wired.
@@ -1780,5 +1828,40 @@ impl LaserProtocol {
                 ValidationErrorType::MissingName,
             ));
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parse_laser_single_wavelength() {
+        let xml = r#"<Laser BeamDiameter="0.0" BeamDivergenceMax="0.0" BeamDivergenceMin="0.0" Color="638.0" ColorType="SingleWaveLength" Name="Laser" OutputStrength="0.02" Position="{1.0,0.0,0.0,0.0}{0.0,1.0,0.0,0.0}{0.0,0.0,1.0,0.0}{0.0,0.0,0.0,1.0}" ScanAnglePan="0.0" ScanAngleTilt="0.0" ScanSpeed="0.0"/>"#;
+        let g: LaserGeometry = quick_xml::de::from_str(xml).expect("parse");
+        assert!(matches!(
+            g.color_type_kind,
+            LaserColorTypeKind::SingleWaveLength
+        ));
+        assert_eq!(g.color_wavelength, Some(638.0));
+        match g.color_type() {
+            ColorType::SingleWaveLength(nm) => assert!((nm - 638.0).abs() < 1e-6),
+            other => panic!("expected SingleWaveLength, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn parse_laser_rgb_default() {
+        let xml = r#"<Laser BeamDiameter="0.0" BeamDivergenceMax="0.0" BeamDivergenceMin="0.0" Name="Laser" OutputStrength="0.02" Position="{1.0,0.0,0.0,0.0}{0.0,1.0,0.0,0.0}{0.0,0.0,1.0,0.0}{0.0,0.0,0.0,1.0}" ScanAnglePan="0.0" ScanAngleTilt="0.0" ScanSpeed="0.0"/>"#;
+        let g: LaserGeometry = quick_xml::de::from_str(xml).expect("parse");
+        assert!(matches!(g.color_type_kind, LaserColorTypeKind::Rgb));
+        assert!(matches!(g.color_type(), ColorType::Rgb));
+    }
+
+    #[test]
+    fn parse_beam_with_oversized_color_rendering_index() {
+        let xml = r#"<Beam BeamAngle="0" BeamRadius="0" BeamType="Wash" ColorRenderingIndex="6631" ColorTemperature="5600" FieldAngle="0" LampType="LED" LuminousFlux="100" Name="Beam" PowerConsumption="100" Position="{1,0,0,0}{0,1,0,0}{0,0,1,0}{0,0,0,1}"/>"#;
+        let g: BeamGeometry = quick_xml::de::from_str(xml).expect("parse");
+        assert_eq!(g.color_rendering_index, 6631);
     }
 }
