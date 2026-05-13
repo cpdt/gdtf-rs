@@ -654,9 +654,156 @@ pub struct Gamut {
 
     /// Set of points defining the vertices of the gamut's polygon.
     ///
-    /// Corresponds to the `Points` XML attribute.
-    #[serde(rename = "@Points", skip_serializing_if = "Vec::is_empty")]
-    pub points: Vec<ColorCie>, // todo: array separator?
+    /// Corresponds to the `Points` XML attribute. The GDTF representation is
+    /// a single string of `{x,y,Y}{x,y,Y}{x,y,Y}…` blocks (one per polygon
+    /// vertex), so a custom serializer joins them with no separator and a
+    /// custom deserializer splits on the `{`/`}` delimiters.
+    #[serde(
+        rename = "@Points",
+        with = "gamut_points_serde",
+        skip_serializing_if = "Vec::is_empty",
+        default
+    )]
+    pub points: Vec<ColorCie>,
+}
+
+mod gamut_points_serde {
+    use super::{ColorCie, Deserializer, Error, Formatter, Serializer, Unexpected, Visitor};
+    use std::fmt::Write;
+
+    pub fn serialize<S>(points: &[ColorCie], serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut out = String::with_capacity(points.len() * 24);
+        for p in points {
+            write!(out, "{{{},{},{}}}", p.x, p.y, p.z).map_err(serde::ser::Error::custom)?;
+        }
+        serializer.serialize_str(&out)
+    }
+
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<Vec<ColorCie>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        struct PointsVisitor;
+
+        impl<'de> Visitor<'de> for PointsVisitor {
+            type Value = Vec<ColorCie>;
+
+            fn expecting(&self, f: &mut Formatter) -> std::fmt::Result {
+                f.write_str("a points string in the format {x,y,Y}{x,y,Y}…")
+            }
+
+            fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
+            where
+                E: Error,
+            {
+                let trimmed = v.trim();
+                if trimmed.is_empty() {
+                    return Ok(Vec::new());
+                }
+                let mut points = Vec::new();
+                for block in trimmed.split('}') {
+                    let block = block.trim();
+                    if block.is_empty() {
+                        continue;
+                    }
+                    let inner = block
+                        .strip_prefix('{')
+                        .ok_or_else(|| E::invalid_value(Unexpected::Str(block), &self))?;
+                    let mut parts = inner.split(',').map(str::trim);
+                    let x = parts
+                        .next()
+                        .ok_or_else(|| E::invalid_value(Unexpected::Str(inner), &self))?;
+                    let y = parts
+                        .next()
+                        .ok_or_else(|| E::invalid_value(Unexpected::Str(inner), &self))?;
+                    let z = parts
+                        .next()
+                        .ok_or_else(|| E::invalid_value(Unexpected::Str(inner), &self))?;
+                    let parse = |s: &str| {
+                        s.parse::<f64>().map_err(|_| {
+                            E::invalid_value(Unexpected::Str(s), &"a floating point number")
+                        })
+                    };
+                    points.push(ColorCie {
+                        x: parse(x)?,
+                        y: parse(y)?,
+                        z: parse(z)?,
+                    });
+                }
+                Ok(points)
+            }
+        }
+
+        // GDTF emits the field as a single attribute string; legacy code paths
+        // that round-tripped via Serialize may have produced a sequence, so
+        // tolerate either shape on read.
+        struct Either;
+        impl<'de> Visitor<'de> for Either {
+            type Value = Vec<ColorCie>;
+
+            fn expecting(&self, f: &mut Formatter) -> std::fmt::Result {
+                f.write_str("a points string or sequence of ColorCie")
+            }
+
+            fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
+            where
+                E: Error,
+            {
+                PointsVisitor.visit_str(v)
+            }
+
+            fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
+            where
+                A: serde::de::SeqAccess<'de>,
+            {
+                let mut out = Vec::new();
+                while let Some(elem) = seq.next_element::<ColorCie>()? {
+                    out.push(elem);
+                }
+                Ok(out)
+            }
+        }
+
+        deserializer.deserialize_any(Either)
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::super::Gamut;
+
+        #[test]
+        fn parse_three_point_gamut() {
+            let xml = r#"<Gamut Name="Test" Points="{0.640000,0.330000,21.262754}{0.300000,0.600000,71.516600}{0.150000,0.060000,7.224500}"/>"#;
+            let g: Gamut = quick_xml::de::from_str(xml).expect("parse");
+            assert_eq!(g.points.len(), 3);
+            assert!((g.points[0].x - 0.64).abs() < 1e-6);
+            assert!((g.points[2].z - 7.2245).abs() < 1e-4);
+        }
+
+        #[test]
+        fn round_trip_preserves_points() {
+            let original = r#"<Gamut Name="Test" Points="{0.687,0.32,28.7}{0.31,0.67,71.5}{0.15,0.06,7.2}"/>"#;
+            let g: Gamut = quick_xml::de::from_str(original).expect("parse");
+            let written = quick_xml::se::to_string(&g).expect("serialize");
+            let back: Gamut = quick_xml::de::from_str(&written).expect("re-parse");
+            assert_eq!(g.points.len(), back.points.len());
+            for (a, b) in g.points.iter().zip(back.points.iter()) {
+                assert!((a.x - b.x).abs() < 1e-6);
+                assert!((a.y - b.y).abs() < 1e-6);
+                assert!((a.z - b.z).abs() < 1e-6);
+            }
+        }
+
+        #[test]
+        fn empty_points_attribute_parses_to_empty_vec() {
+            let xml = r#"<Gamut Name="Empty" Points=""/>"#;
+            let g: Gamut = quick_xml::de::from_str(xml).expect("parse");
+            assert!(g.points.is_empty());
+        }
+    }
 }
 
 impl Gamut {
