@@ -37,6 +37,7 @@ pub struct AttributeDefinitions {
     /// Corresponds to the `<FeatureGroups>` child XML node.
     #[serde(
         rename = "FeatureGroups",
+        default,
         skip_serializing_if = "Vec::is_empty",
         with = "serialize_feature_groups"
     )]
@@ -47,6 +48,7 @@ pub struct AttributeDefinitions {
     /// Corresponds to the `<Attributes>` child XML node.
     #[serde(
         rename = "Attributes",
+        default,
         skip_serializing_if = "Vec::is_empty",
         with = "serialize_attributes"
     )]
@@ -305,7 +307,7 @@ pub struct Attribute {
     /// See the [Attribute::feature] method to look up the linked feature.
     ///
     /// Corresponds to the `Feature` XML attribute.
-    #[serde(rename = "@Feature")]
+    #[serde(rename = "@Feature", skip_serializing_if = "Option::is_none")]
     pub feature: Option<Node>,
 
     /// Optional link to the main [Attribute].

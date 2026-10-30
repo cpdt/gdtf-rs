@@ -1067,3 +1067,15 @@ where
     let str = String::deserialize(deserializer)?;
     Ok(if str.is_empty() { None } else { Some(str) })
 }
+
+pub(crate) fn non_empty_uuid<'de, D>(deserializer: D) -> Result<Option<uuid::Uuid>, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    match non_empty_string(deserializer)? {
+        None => Ok(None),
+        Some(str) => uuid::Uuid::parse_str(&str)
+            .map(Some)
+            .map_err(|_| D::Error::invalid_value(Unexpected::Str(&str), &"a UUID")),
+    }
+}

@@ -846,7 +846,7 @@ pub struct ReferenceGeometry {
     /// Only top level geometries can be referenced.
     ///
     /// Corresponds to the `Geometry` XML attribute.
-    #[serde(rename = "@Geometry")]
+    #[serde(rename = "@Geometry", skip_serializing_if = "Option::is_none")]
     pub geometry: Option<Name>,
 
     /// Specifies DMX offsets for the DMX channels of the referenced geometry.
@@ -1209,6 +1209,7 @@ pub enum ComponentType {
         /// Corresponds to the `MaxPayLoad` XML attribute.
         #[serde(
             rename = "@MaxPayLoad",
+            default,
             skip_serializing_if = "Option::is_none",
             deserialize_with = "Parse::deserialize"
         )]
@@ -1221,6 +1222,7 @@ pub enum ComponentType {
         /// Corresponds to the `Voltage` XML attribute.
         #[serde(
             rename = "@Voltage",
+            default,
             skip_serializing_if = "Option::is_none",
             deserialize_with = "Parse::deserialize"
         )]
@@ -1236,6 +1238,7 @@ pub enum ComponentType {
         /// Corresponds to the `ElectricalPayLoad` XML attribute.
         #[serde(
             rename = "@ElectricalPayLoad",
+            default,
             skip_serializing_if = "Option::is_none",
             deserialize_with = "Parse::deserialize"
         )]
@@ -1248,6 +1251,7 @@ pub enum ComponentType {
         /// Corresponds to the `VoltageRangeMax` XML attribute.
         #[serde(
             rename = "@VoltageRangeMax",
+            default,
             skip_serializing_if = "Option::is_none",
             deserialize_with = "Parse::deserialize"
         )]
@@ -1260,6 +1264,7 @@ pub enum ComponentType {
         /// Corresponds to the `VoltageRangeMin` XML attribute.
         #[serde(
             rename = "@VoltageRangeMin",
+            default,
             skip_serializing_if = "Option::is_none",
             deserialize_with = "Parse::deserialize"
         )]
@@ -1272,6 +1277,7 @@ pub enum ComponentType {
         /// Corresponds to the `FrequencyRangeMax` XML attribute.
         #[serde(
             rename = "@FrequencyRangeMax",
+            default,
             skip_serializing_if = "Option::is_none",
             deserialize_with = "Parse::deserialize"
         )]
@@ -1284,6 +1290,7 @@ pub enum ComponentType {
         /// Corresponds to the `FrequencyRangeMin` XML attribute.
         #[serde(
             rename = "@FrequencyRangeMin",
+            default,
             skip_serializing_if = "Option::is_none",
             deserialize_with = "Parse::deserialize"
         )]
@@ -1296,6 +1303,7 @@ pub enum ComponentType {
         /// Corresponds to the `CosPhi` XML attribute.
         #[serde(
             rename = "@CosPhi",
+            default,
             skip_serializing_if = "Option::is_none",
             deserialize_with = "Parse::deserialize"
         )]
@@ -1311,6 +1319,7 @@ pub enum ComponentType {
         /// Corresponds to the `FuseCurrent` XML attribute.
         #[serde(
             rename = "@FuseCurrent",
+            default,
             skip_serializing_if = "Option::is_none",
             deserialize_with = "Parse::deserialize"
         )]

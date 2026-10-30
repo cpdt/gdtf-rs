@@ -37,7 +37,7 @@ pub struct DmxMode {
     /// Only top level geometries are allowed to be linked.
     ///
     /// Corresponds to the `Geometry` XML attribute.
-    #[serde(rename = "@Geometry")]
+    #[serde(rename = "@Geometry", skip_serializing_if = "Option::is_none")]
     pub geometry: Option<Name>,
 
     /// Description of all DMX channels used in this mode.
@@ -45,6 +45,7 @@ pub struct DmxMode {
     /// Corresponds to the `<DMXChannels>` XML child node.
     #[serde(
         rename = "DMXChannels",
+        default,
         skip_serializing_if = "Vec::is_empty",
         with = "serialize_dmx_channels"
     )]
@@ -202,6 +203,7 @@ pub struct DmxChannel {
     /// Corresponds to the `Offset` XML attribute.
     #[serde(
         rename = "@Offset",
+        default,
         skip_serializing_if = "Option::is_none",
         with = "serialize_dmx_channel_offset"
     )]
@@ -220,6 +222,7 @@ pub struct DmxChannel {
     /// Corresponds to the `Highlight` XML attribute.
     #[serde(
         rename = "@Highlight",
+        default,
         skip_serializing_if = "Option::is_none",
         with = "serialize_dmx_channel_highlight"
     )]
